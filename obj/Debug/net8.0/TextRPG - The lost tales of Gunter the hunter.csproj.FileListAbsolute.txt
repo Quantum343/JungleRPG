@@ -1,0 +1,4 @@
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\obj\Debug\net8.0\TextRPG - The lost tales of Gunter the hunter.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\obj\Debug\net8.0\TextRPG - The lost tales of Gunter the hunter.AssemblyInfoInputs.cache
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\obj\Debug\net8.0\TextRPG - The lost tales of Gunter the hunter.AssemblyInfo.cs
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\obj\Debug\net8.0\TextRPG - The lost tales of Gunter the hunter.csproj.CoreCompileInputs.cache
