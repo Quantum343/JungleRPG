@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "TextRPG - The lost tales of Gunter the hunter/1.0.0": {
+        "runtime": {
+          "TextRPG - The lost tales of Gunter the hunter.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TextRPG - The lost tales of Gunter the hunter/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
