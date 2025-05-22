@@ -1,12 +1,12 @@
-Inventory
-Fighting
-Classes
-Mechanics
-GUI
-Save and Load
-Music/Aesthetics 
-Starting 
-ANCII Map
+Inventory(Johan)
+Fighting(Asad)
+GUI(Asad)
+Save and Load(Asad)
+Music/Aesthetics(Sam) 
+Random events(Johan)
+story(sam)
+ 
+
 
 
 Project Proposal: Jungle Survival RPG (Text-Based) shit....
@@ -48,3 +48,6 @@ Why This Project Should Be Approved:
 
 
 
+git add .
+git commit -m "[updates]"
+git push origin main
