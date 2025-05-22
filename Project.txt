@@ -1,0 +1,50 @@
+Inventory
+Fighting
+Classes
+Mechanics
+GUI
+Save and Load
+Music/Aesthetics 
+Starting 
+ANCII Map
+
+
+Project Proposal: Jungle Survival RPG (Text-Based) shit....
+
+Purpose:
+My project is a text-based survival RPG where the player is stranded in a jungle and must survive by making decisions, exploring an ASCII map, and managing resources. Inspired by roguelike mechanics, the game includes combat, random events (e.g., wildlife, weather), and crafting. The purpose is to develop an interactive, algorithm-heavy simulation that challenges OUR programming and design skills.
+
+This project aligns with my personal interest in storytelling and dynamic systems while showcasing real computing science principles.
+
+CTS Modules:
+1. CSE3120 - Object-Oriented Programming 1
+   - Game is fully designed using OOP: player, items, enemies, terrain, and actions are implemented through class hierarchies.
+   - Encapsulation, abstraction, and polymorphism will be used for modular, extensible code.
+2. CSE3110 - Iterative Algorithms 1
+   - Movement logic, maybe turn based event handling, combat, and random terain generation use iterative loops and decision steuctures.
+
+Computational Thinking Elements:
+- Algorithms: Combat resolution, event generation, map updates
+- Patterns: Random events and repeated decision trees
+- Abstraction & Encapsulation: Simplified representations of game nechanics within classes
+- Generalization: reusable interaction systems for all objects
+- Decomppsition: Game loop split into input, update, and display steps
+
+Object-Oriented Programming:
+- Abstraction: Separate modules for map, player, enemies, and items
+- Aggregation: Player has inventory, stats, and current location grouped logically
+- Inheritance: Base class "Entity" inherited by "Player", "Animal", "NPC"
+- Polymorphism: Shared actions like move() and interact() behave differently based on object
+
+Why This Project Should Be Approved:
+- It meets all personal project criteria and clearly incorporates both required CTS modules.
+- It demonstrates advanced programming principles and computational thinking in a creative format.
+- It’s more educational because this grows multiple abilities like design, logic, and organzation.
+- The project allows for deep personal engagement and wanting to something big.
+- Intention to implement multiplayer 
+
+
+
+
+
+
