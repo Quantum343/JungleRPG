@@ -1,7 +1,7 @@
 Inventory(Johan)
 Fighting(Asad)
 GUI(Asad)
-Save and Load(Asad)
+Save and Load(Johan)
 Music/Aesthetics(Sam) 
 Random events(Johan)
 story(sam)

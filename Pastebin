@@ -1,0 +1,10 @@
+
+public static Weapon EmberFang = new Weapon(65, "Flame Bite", 35, "Spark Snap", 3, 4, "A basic iron sword enchanted with weak fire magic. Ideal for beginner adventurers.");
+public static Weapon StormSplitter = new Weapon(25, "Thunder Slash", 15, "Static Arc", 5, 10, "A steel longsword that crackles with electrical energy. Strong against metal-armored foes.");
+public static Weapon NightReaver = new Weapon(45, "Void Rend", 20, "Shadow Slice", 7, 16, "Forged in darkness, this blade weakens enemies' vision and lowers their defense briefly.");
+public static Weapon DragonspineExecutioner = new Weapon(75, "Infernal Decapitation", 40, "Ember Swipe", 6, 28, "A massive greatsword made from dragon bones. Delivers heavy fire-based damage.");
+public static Weapon MirrorEdge = new Weapon(60, "Radiant Slash", 45, "Glint Pierce", 12, 22, "A crystal blade that reflects some light-based magic back at the attacker. Ideal against mages.");
+public static Weapon Bloodthirster = new Weapon(70, "Life Leech", 55, "Crimson Swipe", 10, 30, "A cursed weapon that steals a bit of the target's vitality with each strike.");
+public static Weapon ChronoFang = new Weapon(65, "Time Rend", 50, "Clock Pierce", 14, 24, "An arcane blade said to distort time. Occasionally delays an enemy’s next move.");
+public static Weapon VoidwalkerBlade = new Weapon(80, "Blink Cleave", 60, "Slipstream Cut", 15, 32, "A blade infused with void energy. Allows the wielder to strike from a short distance instantly.");
+dmgspecial, attack special, dmgnormal, attack normal, speed, strenght, description
