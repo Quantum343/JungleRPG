@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 
+
 namespace JungleSurvivalRPG
 {
     public class Item
@@ -89,8 +90,19 @@ namespace JungleSurvivalRPG
         public static readonly Item Rat = new Item(
             "Rat",
             "A small, quick creature that can be found in the jungle.",
-            player => Printer.PrintSlow($"{player.Name} encounters a Rat! This is not an item to use.\n"
-        )
+            player =>
+            {
+                Printer.PrintSlow($"{player.Name} is scratched by the Rat.\n");
+                player.HP = Math.Max(0f, player.HP - 10);
+            }
+        );
+        public static readonly Item EmptyWaterFlask = new Item(
+            "Empty Water Flask",
+            "A flask that once contained water, now empty.",
+            player =>
+            {
+                Printer.PrintSlow($"{player.Name} no water :c \n");
+            });
 
         public static readonly List<Item> All = new List<Item>
         {
@@ -100,7 +112,9 @@ namespace JungleSurvivalRPG
             StrengthPotion,
             DefenseHerb,
             SpeedBoots,
-            LuckCharm
+            LuckCharm,
+            Rat,
+            EmptyWaterFlask
         };
     }
 }

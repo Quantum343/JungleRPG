@@ -5,5 +5,18 @@
         public static Weapon MirrorEdge = new Weapon(160, "Radiant Slash", 100, "Glint Pierce", -12, 22, "A crystal blade that reflects some light-based magic back at the attacker.");
         public static Weapon Bloodthirster = new Weapon(160, "Life Leech", 95, "Crimson Swipe", -3, 30, "A cursed weapon that steals a bit of the target's vitality with each strike.");
         public static Weapon ChronoFang = new Weapon(175, "Time Rend", 80, "Clock Pierce", -3, 24, "An arcane blade said to distort time. Occasionally delays an enemy’s next move.");
-        public static Weapon VoidwalkerBlade = new Weapon(80, "Blink Cleave", 60, "Slipstream Cut", 15, 32, "A blade infused with void energy. Allows the wielder to strike from a short distance instantly.");
+        public static Weapon VoidwalkerBlade = new Weapon(1000, "Hakai", 0, "Slipstream Cut", 15, 15, "A blade infused with void energy. Allows the wielder to strike from a short distance instantly.");
 dmgspecial, attack special, dmgnormal, attack normal, speed, strenght, description
+
+public static ChestArmor BarkhideVest = new ChestArmor(8, 2, -1, 1); // Balanced LVL5
+   public static Armor BarkhideVest = new ChestArmor(8, 2, -1, 1,"Balanced");  
+    public static Armor WornScoutJacket = new ChestArmor(6, 1, 0, 2,"Nimble, higher luck/speed");// LVL20 
+    public static Armor IronScaleMail = new ChestArmor(20, 5, -5, 2,"Heavy defense");
+    public static Armor RogueTunic = new ChestArmor(14, 3, -1, 6, "Agile, higher luck/speed"); 
+    public static Armor PhantomCoat = new ChestArmor(35, 15, 5, 4," Stealth-focused, decent all-around");//LVL35
+    public static Armor BattleForgedPlates = new ChestArmor(40, 9, 2, 2,"Tankier variant"); 
+    public static Armor DrakeskinPlate = new ChestArmor(55, 15, 0, 6,"Sturdy, magical resistance implied");//LVL60 
+    public static Armor ValkyrieShroud = new ChestArmor(48, 11, 7, 10,"Luck and speed boosted"); 
+    public static Armor RadiantPlate = new ChestArmor(70, 18, 0, 10,"Light-infused, aura-based defense"); //LV90
+    public static Armor ShadowRaiment = new ChestArmor(60, 22, 14, 8,"Shadow-enhanced, offensive agility");
+    defence, strength, speed, luck and description.

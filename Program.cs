@@ -1,6 +1,8 @@
-﻿using System;
+﻿// Program.cs
+using System;
 using System.Collections.Generic;
 using System.Threading;
+using JungleSurvivalRPG;  // for Item, ItemCatalog
 
 namespace JungleSurvivalRPG
 {
@@ -8,14 +10,11 @@ namespace JungleSurvivalRPG
     {
         public int Defence { get; set; }
         public int Strength { get; set; }
-        public int Speed { get; set; }
-        public int Luck { get; set; }
+        public int Speed   { get; set; }
+        public int Luck    { get; set; }
         public ChestArmor(int defence, int strength, int speed, int luck)
         {
-            Defence = defence;
-            Strength = strength;
-            Speed = speed;
-            Luck = luck;
+            Defence = defence; Strength = strength; Speed = speed; Luck = luck;
         }
     }
 
@@ -23,60 +22,55 @@ namespace JungleSurvivalRPG
     {
         public int Defence { get; set; }
         public int Endurance { get; set; }
-        public int Speed { get; set; }
-        public int Luck { get; set; }
+        public int Speed   { get; set; }
+        public int Luck    { get; set; }
         public WaistArmor(int defence, int endurance, int speed, int luck)
         {
-            Defence = defence;
-            Endurance = endurance;
-            Speed = speed;
-            Luck = luck;
+            Defence = defence; Endurance = endurance; Speed = speed; Luck = luck;
         }
     }
 
     public class Weapon
     {
-        public int HeavyManaAttack { get; set; }
+        public int HeavyManaAttack     { get; set; }
         public string HeavyManaAttackName { get; set; }
-        public int LightManaAttack { get; set; }
+        public int LightManaAttack     { get; set; }
         public string LightManaAttackName { get; set; }
-        public int Speed { get; set; }
-        public int Strength { get; set; }
+        public int Speed               { get; set; }
+        public int Strength            { get; set; }
         public string HeavyAttackDescription { get; set; }
-        public Weapon(int heavyManaAttack, string heavyManaAttackName, int lightManaAttack, string lightManaAttackName, int speed, int strength, string heavyAttackDescription)
+
+        public Weapon(int heavyManaAttack, string heavyManaAttackName,
+                      int lightManaAttack, string lightManaAttackName,
+                      int speed, int strength, string heavyAttackDescription)
         {
-            HeavyManaAttack = heavyManaAttack;
-            HeavyManaAttackName = heavyManaAttackName;
-            LightManaAttack = lightManaAttack;
-            LightManaAttackName = lightManaAttackName;
-            Speed = speed;
-            Strength = strength;
-            HeavyAttackDescription = heavyAttackDescription;
+            HeavyManaAttack       = heavyManaAttack;
+            HeavyManaAttackName   = heavyManaAttackName;
+            LightManaAttack       = lightManaAttack;
+            LightManaAttackName   = lightManaAttackName;
+            Speed                 = speed;
+            Strength              = strength;
+            HeavyAttackDescription= heavyAttackDescription;
         }
     }
 
     public static class Equipment
     {
-        public static Weapon EmberFang = new Weapon(65, "Flame Bite", 25, "Spark Snap", 3, 4, "A basic iron sword enchanted with weak fire magic.");
-        public static Weapon StormSplitter = new Weapon(85, "Thunder Slash", 45, "Static Arc", 5, 10, "A steel longsword that crackles with electrical energy.");
-        public static Weapon NightReaver = new Weapon(120, "Void Rend", 65, "Shadow Slice", 7, 16, "Forged in darkness, this blade weakens enemies' vision.");
-        public static Weapon DragonspineExecutioner = new Weapon(75, "Infernal Decapitation", 40, "Ember Swipe", 6, 28, "A massive greatsword made from dragon bones. Delivers heavy fire-based damage.");
-        public static Weapon MirrorEdge = new Weapon(60, "Radiant Slash", 45, "Glint Pierce", 12, 22, "A crystal blade that reflects some light-based magic back at the attacker.");
-        public static Weapon Bloodthirster = new Weapon(70, "Life Leech", 55, "Crimson Swipe", 10, 30, "A cursed weapon that steals a bit of the target's vitality with each strike.");
-        public static Weapon ChronoFang = new Weapon(65, "Time Rend", 50, "Clock Pierce", 14, 24, "An arcane blade said to distort time. Occasionally delays an enemy’s next move.");
-        public static Weapon VoidwalkerBlade = new Weapon(80, "Blink Cleave", 60, "Slipstream Cut", 15, 32, "A blade infused with void energy. Allows the wielder to strike from a short distance instantly.");
+        public static Weapon EmberFang = new Weapon(
+            65, "Flame Bite", 25, "Spark Snap", 3, 4,
+            "A basic iron sword enchanted with weak fire magic."
+        );
+        // … other weapons …
     }
 
     public class Enemy
     {
-        public string Name { get; }
-        public int HP { get; set; }
-        public int AttackPower { get; }
+        public string Name       { get; }
+        public int HP            { get; set; }
+        public int AttackPower   { get; }
         public Enemy(string name, int hp, int attackPower)
         {
-            Name = name;
-            HP = hp;
-            AttackPower = attackPower;
+            Name = name; HP = hp; AttackPower = attackPower;
         }
     }
 
@@ -91,81 +85,86 @@ namespace JungleSurvivalRPG
     {
         public string Text { get; set; }
         public Dictionary<int, SceneID> Choices { get; } = new();
-        public Scene(string text) { Text = text; }
+        public Action<Player> OnEnter { get; }
+
+        public Scene(string text, Action<Player>? onEnter = null)
+        {
+            Text = text;
+            OnEnter = onEnter ?? (_ => { });
+        }
     }
 
     public class Player
     {
-        public string Name { get; set; }
-        public float HP { get; set; }
-        public float Defence { get; set; }
-        public int Luck { get; set; }
-        public float Mana { get; set; }
-        public int Speed { get; set; }
-        public int Strength { get; set; }
+        public string Name       { get; set; }
+        public float HP          { get; set; }
+        public float Defence     { get; set; }
+        public int Luck          { get; set; }
+        public float Mana        { get; set; }
+        public int Speed         { get; set; }
+        public int Strength      { get; set; }
         public Weapon EquippedWeapon { get; set; }
-        public List<Item> Inventory { get; } = new List<Item>();
+        public List<Item> Inventory   { get; } = new();
 
         public Player(string name)
         {
             Name = name;
-            HP = 100f;
-            Defence = 5f;
-            Luck = 1;
-            Mana = 20f;
-            Speed = 4;
-            Strength = 5;
+            HP = 100f; Defence = 5f; Luck = 1;
+            Mana = 20f; Speed = 4; Strength = 5;
             EquippedWeapon = Equipment.EmberFang;
-            Inventory.Add(new Item("Water Flask", "A container for water that helps you stay hydrated."));
+            Inventory.Add(ItemCatalog.EmptyWaterFlask);
         }
 
         public int Attack() => EquippedWeapon.Strength;
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(int dmg)
         {
-            int net = Math.Max(0, damage - (int)Defence);
+            int net = Math.Max(0, dmg - (int)Defence);
             HP -= net;
-            Printer.PrintSlow($"{Name} takes {net} damage. HP: {HP}\n");
+            Console.WriteLine($"{Name} takes {net} damage. HP: {HP}\n");
         }
 
         public void OpenInventory()
         {
             if (Inventory.Count == 0)
             {
-                Printer.PrintSlow("Inventory is empty.\n");
-                return;
+            Console.WriteLine("Inventory is empty.");
+            return;
             }
-            int index = 0;
+            int idx = 0;
             ConsoleKey key;
             do
             {
-                Console.Clear();
-                Printer.PrintSlow("-- Inventory --\n");
-                for (int i = 0; i < Inventory.Count; i++)
-                {
-                    if (i == index) Console.Write("> "); else Console.Write("  ");
-                    Printer.PrintSlow(Inventory[i].Name + "\n");
-                }
-                Printer.PrintSlow("\n" + Inventory[index].Description + "\n");
-                Printer.PrintSlow("Use ↑/↓ to navigate, Enter to exit.\n");
-
-                var keyInfo = Console.ReadKey(true);
-                key = keyInfo.Key;
-                if (key == ConsoleKey.UpArrow)
-                    index = (index - 1 + Inventory.Count) % Inventory.Count;
-                else if (key == ConsoleKey.DownArrow)
-                    index = (index + 1) % Inventory.Count;
-
-            } while (key != ConsoleKey.Enter);
             Console.Clear();
+            Console.WriteLine("-- Inventory --");
+            for (int i = 0; i < Inventory.Count; i++)
+            {
+                Console.Write(i == idx ? "> " : "  ");
+                Console.WriteLine(Inventory[i].Name);
+            }
+            Console.WriteLine("\n" + Inventory[idx].Description);
+            Console.WriteLine("Use ↑/↓ to navigate, Enter to use & exit.");
+
+            key = Console.ReadKey(true).Key;
+            if (key == ConsoleKey.UpArrow)
+                idx = (idx - 1 + Inventory.Count) % Inventory.Count;
+            else if (key == ConsoleKey.DownArrow)
+                idx = (idx + 1) % Inventory.Count;
+            }
+            while (key != ConsoleKey.Enter);
+
+            Console.Clear();
+            var chosen = Inventory[idx];
+            chosen.Use(this);
+            Inventory.RemoveAt(idx);
         }
-    }
+        }
 
     public static class Printer
     {
         public static void PrintSlow(string text, int delay = 30)
         {
-            foreach (char c in text)
+            foreach (var c in text)
             {
                 Console.Write(c);
                 Thread.Sleep(delay);
@@ -177,18 +176,21 @@ namespace JungleSurvivalRPG
     {
         private Player player = null!;
         private Dictionary<SceneID, Scene> scenes = null!;
-        private List<Enemy> enemies = new List<Enemy>();
+        private List<Enemy> enemies = new();
         private SceneID current;
         private SceneID lastScene;
+        
 
         public void Start()
         {
-            Printer.PrintSlow("Welcome to Jungle Survival RPG!\n");
+            Console.WriteLine("Welcome to Jungle Survival RPG!\n");
             Console.Write("Enter your name: ");
-            var input = Console.ReadLine() ?? "Player";
-            player = new Player(input);
+            var name = Console.ReadLine() ?? "Player";
+            player = new Player(name);
+
             InitializeEnemies();
             BuildScenes();
+
             current = new SceneID(1, 1);
             Run();
         }
@@ -201,36 +203,107 @@ namespace JungleSurvivalRPG
 
         private void BuildScenes()
         {
-            scenes = new Dictionary<SceneID, Scene>();
-            scenes[new SceneID(1, 1)] = new Scene("You awaken on a sandy riverbank...\n1) Head into the forest.\n2) Follow the river.\n3) Climb the outcrop.\n");
+            scenes = new();
+
+            // Intro
+            scenes[new SceneID(1, 1)] = new Scene(
+                "You awaken on a sandy riverbank...\n" +
+                "1) Head into the forest.\n" +
+                "2) Follow the river.\n" +
+                "3) Climb the outcrop.\n"
+            );
             scenes[new SceneID(1, 1)].Choices[1] = new SceneID(1, 2);
             scenes[new SceneID(1, 1)].Choices[2] = new SceneID(1, 3);
             scenes[new SceneID(1, 1)].Choices[3] = new SceneID(1, 4);
 
-            scenes[new SceneID(1, 2)] = new Scene("Thick vines surround you...\n1) Track the growl.\n2) Open Inventory.\n");
-            scenes[new SceneID(1, 2)].Choices[1] = new SceneID(-1, 0);
-            scenes[new SceneID(1, 2)].Choices[2] = new SceneID(0, 0);
+            // Forest
+            scenes[new SceneID(1, 2)] = new Scene(
+                "Thick vines surround you...\n" +
+                "1) Track the growl.\n" +
+                "2) Follow the river sounds.\n" +
+                "3) Open Inventory.\n"
+            );
+            scenes[new SceneID(1, 2)].Choices[1] = new SceneID(1, 6);
+            scenes[new SceneID(1, 2)].Choices[2] = new SceneID(1, 3);
+            scenes[new SceneID(1, 2)].Choices[3] = new SceneID(0, 0);
 
-            scenes[new SceneID(1, 3)] = new Scene("Following the river...\n1) Fill water flask.\n2) Open Inventory.\n");
+            // River bank
+            scenes[new SceneID(1, 3)] = new Scene(
+                "Following the river...\n" +
+                "1) Fill your empty water flask.\n" +
+                "2) Look for fish\n" +
+                "2) Open Inventory.\n"
+            );
             scenes[new SceneID(1, 3)].Choices[1] = new SceneID(1, 5);
-            scenes[new SceneID(1, 3)].Choices[2] = new SceneID(0, 0);
+            scenes[new SceneID(1, 3)].Choices[2] = new SceneID(1, 6);
+            scenes[new SceneID(1, 3)].Choices[3] = new SceneID(0, 0);
 
-            scenes[new SceneID(1, 4)] = new Scene("Atop the outcrop...\n1) Investigate campsite.\n2) Open Inventory.\n");
+            // Outcrop
+            scenes[new SceneID(1, 4)] = new Scene(
+                "Atop the outcrop...\n" +
+                "1) Investigate campsite.\n" +
+                "2) Open Inventory.\n"
+            );
             scenes[new SceneID(1, 4)].Choices[1] = new SceneID(2, 1);
             scenes[new SceneID(1, 4)].Choices[2] = new SceneID(0, 0);
+
+            // Fill Flask scene with OnEnter effect
+            scenes[new SceneID(1, 5)] = new Scene(
+                "You kneel by the river and pour water into your flask...\n" +
+                "1) Continue.\n",
+                player =>
+                {
+                    if (player.Inventory.Remove(ItemCatalog.EmptyWaterFlask))
+                    {
+                        player.Inventory.Add(ItemCatalog.WaterFlask);
+                        Console.WriteLine("You filled your flask! It’s now a full Water Flask.\n");
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have no empty flask to fill.\n");
+                    }
+                }
+            );
+            scenes[new SceneID(1, 5)].Choices[1] = new SceneID(1, 3);
+
+            // Panther encounter
+            scenes[new SceneID(1, 6)] = new Scene(
+                "You track the growl to a clearing...\n" +
+                "1) Fight the panther.\n" +
+                "2) Flee back to the forest.\n" +
+                "3) Open Inventory.\n" +
+                "4) Climb a tree to escape.\n"
+            );
+            scenes[new SceneID(1, 6)].Choices[1] = new SceneID(-1, 0);
+            scenes[new SceneID(1, 6)].Choices[2] = new SceneID(1, 2);
+            scenes[new SceneID(1, 6)].Choices[3] = new SceneID(0, 0);
+            scenes[new SceneID(1, 6)].Choices[4] = new SceneID(1, 7);
+            // Climbing tree escape ACT 2           
+            scenes[new SceneID(1, 7)] = new Scene(
+                "You climb a tree to escape the panther...\n" +
+                "You find a tree house with a rope ladder leading down.\n" +
+                "1) Climb down the rope ladder.\n" +
+                "2) Explore the tree house.\n"
+
+            );
+            scenes[new SceneID(1, 7)].Choices[1] = new SceneID(2, 2);
+            scenes[new SceneID(1, 7)].Choices[2] = new SceneID(2, 3);
         }
 
         private void Run()
         {
             while (true)
             {
+                // Combat trigger (Act -1)
                 if (current.Act == -1)
                 {
                     StartCombat(enemies[0]);
                     current = new SceneID(1, 2);
                     continue;
                 }
-                if (current.Act == 0)
+
+                // Inventory trigger (Act 0, Plot 0)
+                if (current.Act == 0 && current.Plot == 0)
                 {
                     player.OpenInventory();
                     current = lastScene;
@@ -238,50 +311,60 @@ namespace JungleSurvivalRPG
                 }
 
                 var scene = scenes[current];
-                Printer.PrintSlow(scene.Text);
+                // scene-specific effect
+                scene.OnEnter(player);
+                // display
+                Console.WriteLine(scene.Text);
+
                 if (scene.Choices.Count == 0) break;
+
                 Console.Write("Choose: ");
                 var input = Console.ReadLine();
-                if (!int.TryParse(input, out int choice) || !scene.Choices.ContainsKey(choice))
+                if (!int.TryParse(input, out int choice) ||
+                    !scene.Choices.ContainsKey(choice))
                 {
-                    Console.WriteLine("Invalid, try again.\n");
+                    Console.WriteLine("Invalid choice, try again.\n");
                     continue;
                 }
+
                 lastScene = current;
-                current = scene.Choices[choice];
+                current   = scene.Choices[choice];
                 Console.WriteLine();
             }
+
             Console.WriteLine("The End.");
         }
 
         private void StartCombat(Enemy enemy)
         {
-            Printer.PrintSlow($"A wild {enemy.Name} appears!\n");
+            Console.WriteLine($"A wild {enemy.Name} appears!\n");
             while (player.HP > 0 && enemy.HP > 0)
             {
-                Printer.PrintSlow("1) Attack\n2) Flee\n");
+                Console.WriteLine("1) Attack\n2) Flee\n");
                 Console.Write("Action: ");
-                var input = Console.ReadLine();
-                if (input == "1")
+                var cmd = Console.ReadLine();
+                if (cmd == "1")
                 {
                     int dmg = player.Attack();
                     enemy.HP -= dmg;
-                    Printer.PrintSlow($"You hit {enemy.Name} for {dmg} damage.\n");
+                    Console.WriteLine($"You hit {enemy.Name} for {dmg} damage.\n");
                     if (enemy.HP <= 0) break;
                     player.TakeDamage(enemy.AttackPower);
                 }
-                else if (input == "2")
+                else if (cmd == "2")
                 {
-                    Printer.PrintSlow("You fled back to the previous scene.\n");
+                    Console.WriteLine("You fled back to the previous scene.\n");
                     return;
                 }
             }
+
             if (player.HP <= 0)
             {
-                Printer.PrintSlow("You have been defeated...\n");
+                Console.WriteLine("You have been defeated...\n");
                 Environment.Exit(0);
             }
-            Printer.PrintSlow($"You defeated the {enemy.Name}!\n");
+
+            Console.WriteLine($"You defeated the {enemy.Name}!\n");
         }
     }
 
@@ -292,4 +375,4 @@ namespace JungleSurvivalRPG
             new GameEngine().Start();
         }
     }
-} 
+}
