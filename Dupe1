@@ -53,7 +53,7 @@ namespace JungleSurvivalRPG
     public static Weapon MirrorEdge = new Weapon(160, "Radiant Slash", 100, "Glint Pierce", -12, 22, "A crystal blade that reflects some light-based magic back at the attacker.");
     public static Weapon Bloodthirster = new Weapon(160, "Life Leech", 95, "Crimson Swipe", -3, 30, "A cursed weapon that steals a bit of the target's vitality with each strike.");
     public static Weapon ChronoFang = new Weapon(175, "Time Rend", 80, "Clock Pierce", -3, 24, "An arcane blade said to distort time. Occasionally delays an enemy’s next move.");
-    public static Weapon VoidwalkerBlade = new Weapon(1000, "Hakai", 0, "Slipstream Cut", 15, 15, "A blade infused with void energy. Allows the wielder to strike from a short distance instantly.");
+    public static Weapon VoidwalkerBlade = new Weapon(2000, "Hakai", 0, "Slipstream Cut", 15, 15, "A blade infused with void energy. Allows the wielder to strike from a short distance instantly.");
     public static Armor BarkhideVest = new ChestArmor(8, 2, -1, 1,"Balanced");  
     public static Armor WornScoutJacket = new ChestArmor(6, 1, 0, 2,"Nimble, higher luck/speed"); 
     public static Armor IronScaleMail = new ChestArmor(20, 5, -5, 2,"Heavy defense");
@@ -71,16 +71,42 @@ namespace JungleSurvivalRPG
 
     public class Enemy
     {
-        public string Name { get; }
+        public string Name { get; set; }
         public int HP { get; set; }
-        public int AttackPower { get; }
-        public Enemy(string name, int hp, int attackPower)
+        public int AttackPower { get; set; }
+        public Enemy(string name, int hp, int attackPower, int defence)
         {
             Name = name;
             HP = hp;
             AttackPower = attackPower;
         }
     }
+
+   public class BossEnemy
+{
+    public string Name { get; set; }
+    public int HP { get; set; }
+    public int AttackPower { get; set; }
+    public string specialAttack { get; set; }
+    public int specialmove { get; set; }
+    public int Defence { get; set; }
+
+    public BossEnemy(string name, int hp, int attackPower, string specialattack, int specialmove, int defence)
+    {
+        Name = name;
+        HP = hp;
+        AttackPower = attackPower;
+        this.specialAttack = specialattack;
+        this.specialmove = specialmove;
+        Defence = defence;
+    }
+}
+
+public static BossEnemy Bonecrusher = new BossEnemy("Bonecrusher", 300, 40, "Skull Smash", 65, 20);
+public static BossEnemy EmberWraith = new BossEnemy("Ember Wraith", 450, 55, "Flame Vortex", 80, 25);
+public static BossEnemy TempestQueen = new BossEnemy("Tempest Queen", 600, 70, "Storm Nova", 100, 30);
+public static BossEnemy NullSpecter = new BossEnemy("Null Specter", 1200, 90, "Reality Break", 150, 50);
+
 
     public struct SceneID
     {
@@ -182,6 +208,20 @@ namespace JungleSurvivalRPG
         private List<Enemy> enemies = new List<Enemy>();
         private SceneID current;
         private SceneID lastScene;
+
+        public static void DisplayArmors(ChestArmor armor1, ChestArmor armor2)
+        {
+            Console.WriteLine("┌─────────────────────────────┬─────────────────────────────┐");
+            Console.WriteLine($"│ {armorName1,-27} │ {armorName2,-27} │");
+            Console.WriteLine("├─────────────────────────────┼─────────────────────────────┤");
+            Console.WriteLine($"│ Defence: {armor1.Defence,-17} │ Defence: {armor2.Defence,-17} │");
+            Console.WriteLine($"│ Strength: {armor1.Strength,-16} │ Strength: {armor2.Strength,-16} │");
+            Console.WriteLine($"│ Speed: {armor1.Speed,-18} │ Speed: {armor2.Speed,-18} │");
+            Console.WriteLine($"│ Luck: {armor1.Luck,-19} │ Luck: {armor2.Luck,-19} │");
+            Console.WriteLine("├─────────────────────────────┼─────────────────────────────┤");
+            Console.WriteLine($"│ {armor1.Description,-27} │ {armor2.Description,-27} │");
+            Console.WriteLine("└─────────────────────────────┴─────────────────────────────┘");
+         }
 
         public void Start()
         {
