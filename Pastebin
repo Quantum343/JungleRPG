@@ -1,11 +1,12 @@
-        public static Weapon EmberFang = new Weapon(65, "Flame Bite", 25, "Spark Snap", -1, 4, "A basic iron sword enchanted with weak fire magic.");
-        public static Weapon StormSplitter = new Weapon(85, "Thunder Slash", 45, "Static Arc", -5, 10, "A steel longsword that crackles with electrical energy.");
-        public static Weapon NightReaver = new Weapon(120, "Void Rend", 65, "Shadow Slice", -2, 16, "Forged in darkness, this blade weakens enemies' vision.");
-        public static Weapon DragonspineExecutioner = new Weapon(150, "Infernal Decapitation", 85, "Ember Swipe", -7, 28, "A massive greatsword made from dragon bones. Delivers heavy fire-based damage.");
-        public static Weapon MirrorEdge = new Weapon(160, "Radiant Slash", 100, "Glint Pierce", -12, 22, "A crystal blade that reflects some light-based magic back at the attacker.");
-        public static Weapon Bloodthirster = new Weapon(160, "Life Leech", 95, "Crimson Swipe", -3, 30, "A cursed weapon that steals a bit of the target's vitality with each strike.");
-        public static Weapon ChronoFang = new Weapon(175, "Time Rend", 80, "Clock Pierce", -3, 24, "An arcane blade said to distort time. Occasionally delays an enemy’s next move.");
-        public static Weapon VoidwalkerBlade = new Weapon(1000, "Hakai", 0, "Slipstream Cut", 15, 15, "A blade infused with void energy. Allows the wielder to strike from a short distance instantly.");
+       public static Weapon EmberFang = new Weapon(65, "Flame Bite", 25, "Spark Snap", -1, 4, "A basic iron sword enchanted with weak fire magic.", 15);
+public static Weapon StormSplitter = new Weapon(85, "Thunder Slash", 45, "Static Arc", -5, 10, "A steel longsword that crackles with electrical energy.", 20);
+public static Weapon NightReaver = new Weapon(120, "Void Rend", 65, "Shadow Slice", -2, 16, "Forged in darkness, this blade weakens enemies' vision.", 25);
+public static Weapon DragonspineExecutioner = new Weapon(150, "Infernal Decapitation", 85, "Ember Swipe", -7, 28, "A massive greatsword made from dragon bones. Delivers heavy fire-based damage.", 35);
+public static Weapon MirrorEdge = new Weapon(160, "Radiant Slash", 100, "Glint Pierce", -12, 22, "A crystal blade that reflects some light-based magic back at the attacker.", 30);
+public static Weapon Bloodthirster = new Weapon(160, "Life Leech", 95, "Crimson Swipe", -3, 30, "A cursed weapon that steals a bit of the target's vitality with each strike.", 33);
+public static Weapon ChronoFang = new Weapon(175, "Time Rend", 80, "Clock Pierce", -3, 24, "An arcane blade said to distort time. Occasionally delays an enemy’s next move.", 28);
+public static Weapon VoidwalkerBlade = new Weapon(1000, "Hakai", 0, "Slipstream Cut", 15, 15, "A blade infused with void energy. Allows the wielder to strike from a short distance instantly.", 40);
+
 dmgspecial, attack special, dmgnormal, attack normal, speed, strenght, description
 
 public static ChestArmor BarkhideVest = new ChestArmor(8, 2, -1, 1); // Balanced LVL5
@@ -20,3 +21,13 @@ public static ChestArmor BarkhideVest = new ChestArmor(8, 2, -1, 1); // Balanced
     public static Armor RadiantPlate = new ChestArmor(70, 18, 0, 10,"Light-infused, aura-based defense"); //LV90
     public static Armor ShadowRaiment = new ChestArmor(60, 22, 14, 8,"Shadow-enhanced, offensive agility");
     defence, strength, speed, luck and description.
+
+      public static readonly Weapon Stick = new Weapon(
+            heavyManaAttack:       8,
+            heavyManaAttackName:   "Poke their eyes out",
+            lightManaAttack:       1,
+            lightManaAttackName:   "wildly swing",
+            speed:                 2,
+            strength:              4,
+            heavyAttackDescription:"Unleashes a barage of trauma causing pokes to the eye."
+        );

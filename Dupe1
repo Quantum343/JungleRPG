@@ -107,6 +107,64 @@ public static BossEnemy EmberWraith = new BossEnemy("Ember Wraith", 450, 55, "Fl
 public static BossEnemy TempestQueen = new BossEnemy("Tempest Queen", 600, 70, "Storm Nova", 100, 30);
 public static BossEnemy NullSpecter = new BossEnemy("Null Specter", 1200, 90, "Reality Break", 150, 50);
 
+private void PlayerAction(Enemy enemy)
+{
+    Console.WriteLine("Choose your action:");
+
+    Console.WriteLine("1) Normal Attack");
+    bool hasManaWeapon = player.EquippedWeapon != null &&
+                         (player.EquippedWeapon.HeavyManaAttack > 0 || player.EquippedWeapon.LightManaAttack > 0);
+
+    if (hasManaWeapon)
+    {
+        Console.WriteLine("2) Light Mana Attack");
+        Console.WriteLine("3) Heavy Mana Attack");
+    }
+    Console.WriteLine("4) Flee");
+
+    Console.Write("Action: ");
+    var cmd = Console.ReadLine();
+
+    int totalDamage = 0;
+
+    if (cmd == "1")
+    {
+        if (player.EquippedWeapon != null)
+        {
+            totalDamage = (int)(player.EquippedWeapon.RegularAttack * (1 + (player.Strength / 100.0f)));
+            Console.WriteLine($"You strike {enemy.Name} with your weapon for {totalDamage} damage!");
+        }
+        else
+        {
+            totalDamage = player.Strength;
+            Console.WriteLine($"You strike {enemy.Name} with your fists for {totalDamage} damage!");
+        }
+        enemy.HP -= totalDamage;
+    }
+    else if (cmd == "2" && hasManaWeapon)
+    {
+        totalDamage = (int)(player.EquippedWeapon.LightManaAttack * (1 + (player.Strength / 100.0f)));
+        enemy.HP -= totalDamage;
+        Console.WriteLine($"You cast {player.EquippedWeapon.LightManaAttackName} on {enemy.Name} for {totalDamage} damage!");
+    }
+    else if (cmd == "3" && hasManaWeapon)
+    {
+        totalDamage = (int)(player.EquippedWeapon.HeavyManaAttack * (1 + (player.Strength / 100.0f)));
+        enemy.HP -= totalDamage;
+        Console.WriteLine($"You unleash {player.EquippedWeapon.HeavyManaAttackName} on {enemy.Name} for {totalDamage} damage!");
+    }
+    else if (cmd == "4")
+    {
+        Console.WriteLine("You fled back to the previous scene.\n");
+        Environment.Exit(0);
+    }
+    else
+    {
+        Console.WriteLine("Invalid choice. You fumble your turn.");
+    }
+}
+
+
 
     public struct SceneID
     {

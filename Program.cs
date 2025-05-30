@@ -19,28 +19,30 @@ namespace JungleSurvivalRPG
     }
 
     public class Weapon
-    {
-        public int HeavyManaAttack     { get; set; }
-        public string HeavyManaAttackName { get; set; }
-        public int LightManaAttack     { get; set; }
-        public string LightManaAttackName { get; set; }
-        public int Speed               { get; set; }
-        public int Strength            { get; set; }
-        public string HeavyAttackDescription { get; set; }
+{
+    public int HeavyManaAttack { get; set; }
+    public string HeavyManaAttackName { get; set; }
+    public int LightManaAttack { get; set; }
+    public string LightManaAttackName { get; set; }
+    public int Speed { get; set; }
+    public int Strength { get; set; }
+    public string Description { get; set; }
+    public int RegularAttack { get; set; } // New property
 
-        public Weapon(int heavyManaAttack, string heavyManaAttackName,
-                      int lightManaAttack, string lightManaAttackName,
-                      int speed, int strength, string heavyAttackDescription)
-        {
-            HeavyManaAttack       = heavyManaAttack;
-            HeavyManaAttackName   = heavyManaAttackName;
-            LightManaAttack       = lightManaAttack;
-            LightManaAttackName   = lightManaAttackName;
-            Speed                 = speed;
-            Strength              = strength;
-            HeavyAttackDescription= heavyAttackDescription;
-        }
+    public Weapon(int heavyManaAttack, string heavyManaAttackName, int lightManaAttack, string lightManaAttackName,
+                  int speed, int strength, string description, int regularAttack)
+    {
+        HeavyManaAttack = heavyManaAttack;
+        HeavyManaAttackName = heavyManaAttackName;
+        LightManaAttack = lightManaAttack;
+        LightManaAttackName = lightManaAttackName;
+        Speed = speed;
+        Strength = strength;
+        Description = description;
+        RegularAttack = regularAttack;
     }
+}
+
 
     public static class Equipment
     {
@@ -56,15 +58,7 @@ namespace JungleSurvivalRPG
         public static Armor ShadowRaiment = new Armor(60, 22, 14, 8); // Shadow-enhanced, offensive agility
             
                 // ADD THIS:
-        public static readonly Weapon Stick = new Weapon(
-            heavyManaAttack:       8,
-            heavyManaAttackName:   "Poke their eyes out",
-            lightManaAttack:       1,
-            lightManaAttackName:   "wildly swing",
-            speed:                 2,
-            strength:              4,
-            heavyAttackDescription:"Unleashes a barage of trauma causing pokes to the eye."
-        );
+      
     }
 
     public class Enemy
@@ -78,6 +72,26 @@ namespace JungleSurvivalRPG
             Name = name; HP = hp; AttackPower = attackPower;
         }
     }
+
+     public class BossEnemy
+{
+    public string Name { get; set; }
+    public int HP { get; set; }
+    public int AttackPower { get; set; }
+    public string specialAttack { get; set; }
+    public int specialmove { get; set; }
+    public int Defence { get; set; }
+
+    public BossEnemy(string name, int hp, int attackPower, string specialattack, int specialmove, int defence)
+    {
+        Name = name;
+        HP = hp;
+        AttackPower = attackPower;
+        this.specialAttack = specialattack;
+        this.specialmove = specialmove;
+        Defence = defence;
+    }
+}
 
     public struct SceneID
     {
@@ -124,7 +138,7 @@ namespace JungleSurvivalRPG
             Name = name;
             HP = 100f; Defence = 5f; Luck = 1;
             Mana = 20f; Speed = 4; Strength = 5;
-            EquippedWeapon = Equipment.Stick;
+            EquippedWeapon = null;
             Inventory.Add(ItemCatalog.EmptyWaterFlask);
         }
 
@@ -453,39 +467,124 @@ namespace JungleSurvivalRPG
 
             Console.WriteLine("The End.");
         }
-        private void StartCombat(Enemy enemy)
+       private void StartCombat(Enemy enemy)
+{
+    Console.WriteLine($"A wild {enemy.Name} appears!\n");
+
+    bool playerGoesFirst = player.Speed >= enemy.Speed;
+
+    while (player.HP > 0 && enemy.HP > 0)
+    {
+        // Player Turn
+        if (playerGoesFirst)
         {
-            Console.WriteLine($"A wild {enemy.Name} appears!\n");
-            while (player.HP > 0 && enemy.HP > 0)
-            {
-                Console.WriteLine("1) Attack\n2) Flee\n");
-                Console.Write("Action: ");
-                var cmd = Console.ReadLine();
-                if (cmd == "1")
-                {
-                    int filltereddmg = enemy.AttackPower - (int)player.Defence;
-                    int dmg = player.Attack();
-                    enemy.HP -= dmg;
-                    Console.WriteLine($"You hit {enemy.Name} for {dmg} damage.\n");
-                    if (enemy.HP <= 0) break;
-                    player.TakeDamage(filltereddmg);
-                }
-                else if (cmd == "2")
-                {
-                    Console.WriteLine("You fled back to the previous scene.\n");
-                    return;
-                }
-            }
-
-            if (player.HP <= 0)
-            {
-                Console.WriteLine("You have been defeated...\n");
-                Environment.Exit(0);
-            }
-
-            Console.WriteLine($"You defeated the {enemy.Name}!\n");
+            PlayerAction(enemy);
+            if (enemy.HP <= 0) break;
+            EnemyAction(enemy);
+        }
+        else
+        {
+            EnemyAction(enemy);
+            if (player.HP <= 0) break;
+            PlayerAction(enemy);
         }
     }
+
+    if (player.HP <= 0)
+    {
+        Console.WriteLine("You have been defeated...\n");
+        Environment.Exit(0);
+    }
+
+    Console.WriteLine($"You defeated the {enemy.Name}!\n");
+}
+
+private void PlayerAction(Enemy enemy)
+{
+    Console.WriteLine("Choose your action:");
+
+    Console.WriteLine("1) Normal Attack");
+    bool hasManaWeapon = player.EquippedWeapon != null &&
+                         (player.EquippedWeapon.HeavyManaAttack > 0 || player.EquippedWeapon.LightManaAttack > 0);
+
+    if (hasManaWeapon)
+    {
+        Console.WriteLine("2) Light Mana Attack");
+        Console.WriteLine("3) Heavy Mana Attack");
+    }
+    Console.WriteLine("4) Flee");
+
+    Console.Write("Action: ");
+    var cmd = Console.ReadLine();
+
+    int totalDamage = 0;
+
+    if (cmd == "1")
+    {
+        if (player.EquippedWeapon != null)
+        {
+            totalDamage = (int)(player.EquippedWeapon.RegularAttack * (1 + (player.Strength / 100.0f)));
+            Console.WriteLine($"You strike {enemy.Name} with your weapon for {totalDamage} damage!");
+        }
+        else
+        {
+            totalDamage = player.Strength;
+            Console.WriteLine($"You strike {enemy.Name} with your fists for {totalDamage} damage!");
+        }
+        enemy.HP -= totalDamage;
+    }
+    else if (cmd == "2" && hasManaWeapon)
+    {
+        totalDamage = (int)(player.EquippedWeapon.LightManaAttack * (1 + (player.Strength / 100.0f)));
+        enemy.HP -= totalDamage;
+        Console.WriteLine($"You cast {player.EquippedWeapon.LightManaAttackName} on {enemy.Name} for {totalDamage} damage!");
+    }
+    else if (cmd == "3" && hasManaWeapon)
+    {
+        totalDamage = (int)(player.EquippedWeapon.HeavyManaAttack * (1 + (player.Strength / 100.0f)));
+        enemy.HP -= totalDamage;
+        Console.WriteLine($"You unleash {player.EquippedWeapon.HeavyManaAttackName} on {enemy.Name} for {totalDamage} damage!");
+    }
+    else if (cmd == "4")
+    {
+        Console.WriteLine("You fled back to the previous scene.\n");
+        Environment.Exit(0);
+    }
+    else
+    {
+        Console.WriteLine("Invalid choice. You fumble your turn.");
+    }
+}
+
+private void EnemyAction(Enemy enemy)
+{
+    int incomingDamage = enemy.AttackPower - (int)player.Defence;
+    if (incomingDamage < 0) incomingDamage = 0;
+
+    Console.WriteLine($"{enemy.Name} is attacking you!");
+    Console.WriteLine("Do you want to try to dodge? (y/n): ");
+    string dodge = Console.ReadLine();
+
+    if (dodge.ToLower() == "y")
+    {
+        Random rng = new Random();
+        int chance = rng.Next(1, 101); // 1 to 100
+
+        if (chance <= player.Luck)
+        {
+            Console.WriteLine("You dodged the attack!");
+            return;
+        }
+        else
+        {
+            Console.WriteLine("Dodge failed!");
+        }
+    }
+
+    player.TakeDamage(incomingDamage);
+    Console.WriteLine($"{enemy.Name} hits you for {incomingDamage} damage.\n");
+}
+
 
     class Program
     {
