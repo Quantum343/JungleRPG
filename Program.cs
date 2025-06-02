@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using JungleSurvivalRPG;  // for Item, ItemCatalog
+using JungleSurvivalRPG;  // for Item, ItemCatalog 
 
 namespace JungleSurvivalRPG
 {
