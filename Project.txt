@@ -1,10 +1,9 @@
-Inventory(Johan)
-Fighting(Asad)
-GUI(Asad)
-Save and Load(Johan)
-Music/Aesthetics(Sam) 
+Inventory(Sam) 100%
+Fighting(Sam)
+Save and Load(Johan, Asad)
+Music/Aesthetics(Sam, Johan)
 Random events(Johan)
-story(sam)
+story(Sam, Asad, and Johan)
  
 
 
