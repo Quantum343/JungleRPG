@@ -92,8 +92,8 @@ namespace JungleSurvivalRPG
                 Printer.PrintSlow($"{player.Name} restores 30 Mana. Mana: {player.Mana}\n");
             });
 
-        //loot box that gives 4 random items from catalog
-        public static readonly Item LookBox = new Item(
+        // loot box that gives 4 random items from catalog
+        public static readonly Item LootBox = new Item(
             "Loot Box",
             "A mysterious box that contains random items.",
             player =>
@@ -212,7 +212,7 @@ namespace JungleSurvivalRPG
             PoisonDagger,
             TheBook,
             Fish,
-            LookBox
+            LootBox
 
         };
     }
