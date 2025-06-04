@@ -425,6 +425,7 @@ namespace JungleSurvivalRPG
                     player.Inventory.Add(ItemCatalog.TreasureMap);
                     player.Inventory.Add(ItemCatalog.LootBox);
                 }
+                
             );
     
 
