@@ -1,9 +1,8 @@
-Inventory(Sam) 100%
-Fighting(Sam)
-Save and Load(Johan, Asad)
-Music/Aesthetics(Sam, Johan)
-Random events(Johan)
-story(Sam, Asad, and Johan)
+Inventory(Sam) 100% - done
+Fighting(Asad, Sam) 70% - base done
+Save and Load(Johan, Asad) 0% - done at end
+Music/Aesthetics(Sam, Johan) 0% - done at near end
+story(Sam, Asad, and Johan) 20% done start
  
 
 
