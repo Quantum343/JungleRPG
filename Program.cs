@@ -46,6 +46,8 @@ namespace JungleSurvivalRPG
 
     public static class Equipment
     {
+        public static Armor None = new Armor(0, 0, 0, 0); // No armor equipped
+        public static Weapon None = new Weapon(0, "", 0, "", 0, 0, "No weapon equipped", 0); // No weapon equipped
         public static Armor BarkhideVest = new Armor(8, 2, -1, 1); // Balanced LVL5
         public static Armor WornScoutJacket = new Armor(6, 1, 0, 2); // Nimble, higher luck/speed LVL20
         public static Armor IronScaleMail = new Armor(20, 5, -5, 2); // Heavy defense
@@ -129,9 +131,10 @@ namespace JungleSurvivalRPG
         public float Mana { get; set; }
         public int Speed { get; set; }
         public int Strength { get; set; }
-        public Weapon EquippedWeapon { get; set; } = Equipment.RustyDagger;
+        public Weapon EquippedWeapon { get; set; } = Equipment.None; // Default no weapon equipped
         public List<Item> Inventory { get; } = new();
         public bool HasFoundPage2 { get; set; } = false;
+        public Armor EquippedArmor{get;set;}= Armor.None; // Default no armor equipped
 
         public Player(string name)
         {
@@ -148,11 +151,12 @@ namespace JungleSurvivalRPG
             Strength += 5;
         }
 
-        public int Attack() => EquippedWeapon.Strength;
+        public int Attack() => Weapon.regularAttack;
 
-        public void TakeDamage(int dmg)
+        public void TakeDamage(float dmg)
         {
-            int net = Math.Max(0, dmg - (int)Defence);
+            float instanceDef=Player.defence+Player.Armor.defence;
+            int net = Math.Max(0, dmg - instanceDef);
             HP -= net;
             Console.WriteLine($"{Name} takes {net} damage. HP: {HP}\n");
         }
@@ -204,6 +208,23 @@ namespace JungleSurvivalRPG
                 Console.Write(c);
                 Thread.Sleep(delay);
             }
+        }
+        public static void ShowProgressBar()
+
+        {
+
+            for (int i = 0; i <= 100; i += 10)
+
+            {
+
+                Console.Write($"[{new string('#', i / 10)}{new string(' ', 10 - i / 10)}] {i}%\r");
+
+                Thread.Sleep(100);
+
+            }
+
+            Console.WriteLine();
+
         }
         public static void ClearScreen()
         {
@@ -310,7 +331,13 @@ namespace JungleSurvivalRPG
                     if (player.Inventory.Remove(ItemCatalog.EmptyWaterFlask))
                     {
                         player.Inventory.Add(ItemCatalog.WaterFlask);
+                        if (!player.Inventory.Contains(ItemCatalog.Grimoire))
+                            {
+                            player.Inventory.Add(ItemCatalog.Grimoire); // Add grimoire to inventory
+                            }
                         Console.WriteLine("You filled your flask! It’s now a full Water Flask.\n");
+                        Console.WriteLine("You have found a book with leaking mana.\n" +
+                            "Its a grimwoire");
                     }
                     else
                     {
@@ -370,11 +397,25 @@ namespace JungleSurvivalRPG
                 {
                     if (player.Inventory.Contains(ItemCatalog.TreasureMap))
                     {
-                        Console.WriteLine("You already have the treasure map.\n");
+                        //random chance to find nothing or fish in exchange for mana
+                        Random rng = new Random();
+                        int chance = rng.Next(1, 101);
+                        if (chance <= 50) // 50% chance to find nothing
+                        {
+                            Console.WriteLine("You found nothing but mud and weeds. You tired yourself mentally -10 Mana \n");
+                            player.Mana = Math.Max(0, player.Mana - 10);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"You caught a fish! It’s a small one, but it will do.\n" +
+                                "You can use it to restore some health or as a crafting ingredient.\n");
+                            player.Inventory.Add(ItemCatalog.Fish);
+                        }
+                        Console.WriteLine("You see no fish");
                     }
                     else
                     {
-                        Console.WriteLine("You caught a fish and found a treasure map inside!\n");
+                        Console.WriteLine("You found a treasure map!\n");
                         player.Inventory.Add(ItemCatalog.TreasureMap);
                     }
                 }
@@ -391,8 +432,10 @@ namespace JungleSurvivalRPG
 
             // ── RADIO – USE ITEM (scene 1.12) ────────────────────────────────────────
             scenes[new SceneID(1, 12)] = new Scene(
+                "You try to power on the radio...\n" +
                 string.Empty,
                 p => ItemCatalog.DeadRadio.Use(p)     // attempt power-on
+
             );
             scenes[new SceneID(1, 12)].Choices[1] = new SceneID(1, 1);    // return to start
 
@@ -425,8 +468,18 @@ namespace JungleSurvivalRPG
                     player.Inventory.Add(ItemCatalog.TreasureMap);
                     player.Inventory.Add(ItemCatalog.LootBox);
                 }
-                
+
             );
+
+            //Crafting table found at the treehouse
+            scenes[new SceneID(10, 1)].Text +=
+            "You find a Crafting Table here.....\n" +
+                "1) Use the Crafting Table.\n" +
+                "2) Return to the clearing.\n" +
+                "3) Open Inventory.\n";
+            scenes[new SceneID(10, 1)].Choices[0] = new SceneID(10, 2); // Crafting table scene
+            scenes[new SceneID(10, 1)].Choices[1] = new SceneID(2, 1); // Return to clearing
+
     
 
         }
@@ -478,14 +531,20 @@ namespace JungleSurvivalRPG
                     Console.WriteLine("Invalid choice. Please try again.");
                     Thread.Sleep(1000);
                 }
+
+                // Add obtained items to list of known items
+                ItemCatalog.KnownItems.AddRange(player.Inventory);
+                
+                
             }
         }
 
             private void StartCombat(Enemy enemy)
         {
             Console.WriteLine($"A wild {enemy.Name} appears!\n");
+            int instancespeed=player.Speed+Weapon.speed+player.EquippedArmor.Speed; 
 
-            bool playerGoesFirst = player.Speed >= enemy.Speed;
+            bool playerGoesFirst = instancespeed >= enemy.Speed;
 
             while (player.HP > 0 && enemy.HP > 0)
             {
@@ -533,24 +592,28 @@ namespace JungleSurvivalRPG
 
             int totalDamage = 0;
             var weapon = player.EquippedWeapon;
+            float instanceSTR=weapon.Strength+player.Strength+player.EquippedArmor.Strength;
 
             switch (cmd)
             {
                 case "1":
-                    totalDamage = (int)(weapon.RegularAttack * (1 + (player.Strength / 100.0f)));
+                    totalDamage = (int)(weapon.RegularAttack * (1 + (instanceSTR / 100.0f)));
                     Console.WriteLine($"You strike {enemy.Name} with your {weapon.Description} for {totalDamage} damage!");
+                    totalDamage= totalDamage-enemy.Defence;
                     enemy.HP -= totalDamage;
                     break;
                     
                 case "2" when hasManaWeapon:
-                    totalDamage = (int)(weapon.LightManaAttack * (1 + (player.Strength / 100.0f)));
+                    totalDamage = (int)(weapon.LightManaAttack * (1 + (instanceSTR / 100.0f)));
                     Console.WriteLine($"You cast {weapon.LightManaAttackName} on {enemy.Name} for {totalDamage} damage!");
+                    totalDamage= totalDamage-enemy.Defence;
                     enemy.HP -= totalDamage;
                     break;
                     
                 case "3" when hasManaWeapon:
-                    totalDamage = (int)(weapon.HeavyManaAttack * (1 + (player.Strength / 100.0f)));
+                    totalDamage = (int)(weapon.HeavyManaAttack * (1 + (instanceSTR / 100.0f)));
                     Console.WriteLine($"You unleash {weapon.HeavyManaAttackName} on {enemy.Name} for {totalDamage} damage!");
+                    totalDamage= totalDamage-enemy.Defence;
                     enemy.HP -= totalDamage;
                     break;
                     
@@ -567,7 +630,7 @@ namespace JungleSurvivalRPG
 
        private void EnemyAction(Enemy enemy)
         {
-            int incomingDamage = Math.Max(0, enemy.AttackPower - (int)player.Defence);
+            float incomingDamage = Math.Max(0, enemy.AttackPower - (int)player.Defence);
 
             Console.WriteLine($"{enemy.Name} is attacking you!");
             Console.WriteLine("Do you want to try to dodge? (y/n): ");
@@ -584,6 +647,7 @@ namespace JungleSurvivalRPG
                     return;
                 }
                 Console.WriteLine("Dodge failed!");
+                incomingDamage=incomingDamage*1.5;
             }
 
             player.TakeDamage(incomingDamage);

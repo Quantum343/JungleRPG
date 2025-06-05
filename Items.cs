@@ -24,6 +24,9 @@ namespace JungleSurvivalRPG
 
     public static class ItemCatalog
     {
+        // Store list of known/previously found items
+        List<Item> knownItems = new List<Item>();
+
         public static readonly Item RadioBatteries = new Item(
             "Batteries",
             "A pair of AA batteries. Might power something.",
@@ -210,11 +213,31 @@ namespace JungleSurvivalRPG
 
         public static readonly Item Fish = new Item(
             "Fish",
-            "A fresh fish that can be eaten for health.",
+            "A fresh fish that can be eaten for health. Beware, it's quite raw",
             player =>
             {
-                Printer.PrintSlow($"{player.Name} You have eaten the poor fish.\n");
+                Console.WriteLine($"{player.Name} You have eaten the poor fish.\n");
                 player.HP = Math.Min(100f, player.HP + 10);
+                // Random chance of food poisoning, account for luck(^ luck means lower chance of getting unfavorable outcomes)
+                Random random = new Random();
+                if (random.Next(0, 100) < (20 - player.Luck * 2)) // 20% chance minus luck factor
+                {
+                    Console.WriteLine($"{player.Name} feels sick from the fish! You take 5 damage.\n");
+                    player.HP = Math.Max(0f, player.HP - 5);
+                }
+                else
+                {
+                    Console.WriteLine($"{player.Name} feels fine after eating the fish.\n");
+                }
+            });
+
+        public static readonly Item CookedFish = new Item(
+            "Cooked Fish",
+            "A delicious cooked fish that restores 30 HP.",
+            player =>
+            {
+                Printer.PrintSlow($"{player.Name} You have eaten the cooked fish.\n");
+                player.HP = Math.Min(100f, player.HP + 30);
             });
 
         public static readonly Item Grimwore = new Item(
@@ -222,8 +245,66 @@ namespace JungleSurvivalRPG
             "A mysterious item that has ancient spells inscribed on it.",
             player =>
             {
-                Printer.PrintSlow($"{player.Name} examines the Grimwore. It seems to have magical properties.\n");
+                float experience = player.Experience;
+
+                // Initialize unlocked spells based on experience
+                if (experience >= 0)
+                {
+                    player.UnlockSpell("Healing");
+                    player.UnlockSpell("Flame");
+                }
+                if (experience >= 30)
+                {
+                    player.UnlockSpell("Manifestation");
+                    player.UnlockSpell("Sin of Gluttony");
+                }
+                if (experience >= 50)
+                {
+                    player.UnlockSpell("Sin of Greed");
+                    player.UnlockSpell("Sin of Sloth");
+                }
+                if (experience >= 70)
+                {
+                    player.UnlockSpell("Sin of Lust");
+                }
+                if (experience >= 100)
+                {
+                    player.UnlockSpell("Earthquake");
+                    player.UnlockSpell("Tornado");
+                }
+                if (experience >= 120)
+                {
+                    player.UnlockSpell("Fireball");
+                    player.UnlockSpell("Lightning Strike");
+                }
+
+                Printer.PrintSlow($"{player.Name} feels energized by the mana.\n");
+                if (!player.Inventory.Contains(ItemCatalog.Grimwore))
+                    player.Inventory.Add(ItemCatalog.Grimwore);
+
+                // Display unlocked spells
+                Printer.PrintSlow("Unlocked Spells:\n");
+                foreach (var spell in player.UnlockedSpells)
+                {
+                    Printer.PrintSlow($"- {spell}\n");
+                }
             });
+
+        public class Spell
+        {
+            public int Index { get; }
+            public string Name { get; }
+            public string Description { get; }
+            public int ManaCost { get; }
+
+            public Spell(int index, string name, string description, int manaCost)
+            {
+                Index = index;
+                Name = name;
+                Description = description;
+                ManaCost = manaCost;
+            }
+        }
 
         public static readonly List<Item> All = new List<Item>
         {
@@ -240,6 +321,7 @@ namespace JungleSurvivalRPG
             PoisonDagger,
             TheBook,
             Fish,
+            CookedFish,
             LootBox,
             Grimwore,
             RadioBatteries,
