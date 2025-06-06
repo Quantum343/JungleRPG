@@ -1,3 +1,4 @@
+// Items.cs
 using System;
 using System.Collections.Generic;
 
@@ -24,20 +25,18 @@ namespace JungleSurvivalRPG
 
     public static class ItemCatalog
     {
-        // Store list of known/previously found items
-        List<Item> knownItems = new List<Item>();
-
         public static readonly Item RadioBatteries = new Item(
             "Batteries",
             "A pair of AA batteries. Might power something.",
             player =>
             {
                 Printer.PrintSlow("You pocket the batteries. They might power something.\n");
-            });
+            }
+        );
 
         public static readonly Item DeadRadio = new Item(
-            "Hand‑held Radio",
-            "A silent hand‑held radio that needs Batteries to work.",
+            "Hand-held Radio",
+            "A silent hand-held radio that needs Batteries to work.",
             player =>
             {
                 if (player.Inventory.Remove(ItemCatalog.RadioBatteries))
@@ -46,28 +45,34 @@ namespace JungleSurvivalRPG
                     Printer.ShowProgressBar();
                     Console.WriteLine(
                         "\nA crackling voice cuts through the static:\n" +
-                        "\"…survivors, head north to the old research station…\"\n");
+                        "\"…survivors, head north to the old research station…\"\n"
+                    );
                 }
                 else
                 {
                     Console.WriteLine("Nothing happens – it still needs Batteries.");
                     if (!player.Inventory.Contains(ItemCatalog.DeadRadio))
+                    {
                         player.Inventory.Add(ItemCatalog.DeadRadio);
+                    }
                 }
-            });
+            }
+        );
 
         public static readonly Item TheBook = new Item(
             "The Book",
             "A mysterious book that contains knowledge about the jungle.",
             player =>
             {
-                Printer.PrintSlow("Journal Guide Page 1:\n" +
-                                 "1. Always keep your water flask filled.\n" +
-                                 "2. Use your inventory wisely.\n" +
-                                 "3. Enemies can be tough, so prepare before combat.\n" +
-                                 "4. Explore thoroughly to find useful items.\n" +
-                                 "5. Crafting can help you survive longer.\n");
-                Printer.PrintSlow("Press any key to continue to Page 2 or backspace to exit...\n");
+                Printer.PrintSlow(
+                    "Journal Guide Page 1:\n" +
+                    "1. Always keep your water flask filled.\n" +
+                    "2. Use your inventory wisely.\n" +
+                    "3. Enemies can be tough, so prepare before combat.\n" +
+                    "4. Explore thoroughly to find useful items.\n" +
+                    "5. Crafting can help you survive longer.\n"
+                );
+                Printer.PrintSlow("Press any key to continue to Page 2 or Backspace to exit...\n");
                 if (player.HasFoundPage2)
                 {
                     Printer.PrintSlow("You have found Page 2. Press any key to fix the book...\n");
@@ -84,10 +89,13 @@ namespace JungleSurvivalRPG
                         break;
                 }
                 Printer.ClearScreen();
-                Printer.PrintSlow("Page 2: Resources\n" +
-                                  "In the jungle, you can find resources like water, food, and medicinal herbs. " +
-                                  "Knowing how to use these resources effectively is crucial for survival.\n");
-            });
+                Printer.PrintSlow(
+                    "Page 2: Resources\n" +
+                    "In the jungle, you can find resources like water, food, and medicinal herbs. " +
+                    "Knowing how to use these resources effectively is crucial for survival.\n"
+                );
+            }
+        );
 
         public static readonly Item WaterFlask = new Item(
             "Water Flask",
@@ -96,7 +104,8 @@ namespace JungleSurvivalRPG
             {
                 player.HP = Math.Min(100f, player.HP + 50);
                 Printer.PrintSlow($"{player.Name} restores 50 HP. HP: {player.HP}\n");
-            });
+            }
+        );
 
         public static readonly Item PoisonBerry = new Item(
             "Poison Berry",
@@ -105,7 +114,8 @@ namespace JungleSurvivalRPG
             {
                 player.HP = Math.Max(0f, player.HP - 50);
                 Printer.PrintSlow($"{player.Name} takes 50 poison damage. HP: {player.HP}\n");
-            });
+            }
+        );
 
         public static readonly Item ManaPotion = new Item(
             "Mana Potion",
@@ -114,7 +124,8 @@ namespace JungleSurvivalRPG
             {
                 player.Mana += 30;
                 Printer.PrintSlow($"{player.Name} restores 30 Mana. Mana: {player.Mana}\n");
-            });
+            }
+        );
 
         public static readonly Item LootBox = new Item(
             "Loot Box",
@@ -134,7 +145,8 @@ namespace JungleSurvivalRPG
                     player.Inventory.Add(item);
                     Printer.PrintSlow($"You found: {item.Name}!\n");
                 }
-            });
+            }
+        );
 
         public static readonly Item StrengthPotion = new Item(
             "Strength Potion",
@@ -143,7 +155,8 @@ namespace JungleSurvivalRPG
             {
                 player.Strength += 5;
                 Printer.PrintSlow($"{player.Name}'s Strength increases by 5. Strength: {player.Strength}\n");
-            });
+            }
+        );
 
         public static readonly Item DefenseHerb = new Item(
             "Defense Herb",
@@ -152,7 +165,8 @@ namespace JungleSurvivalRPG
             {
                 player.Defence += 3;
                 Printer.PrintSlow($"{player.Name}'s Defence increases by 3. Defence: {player.Defence}\n");
-            });
+            }
+        );
 
         public static readonly Item SpeedBoots = new Item(
             "Speed Boots",
@@ -161,7 +175,8 @@ namespace JungleSurvivalRPG
             {
                 player.Speed += 2;
                 Printer.PrintSlow($"{player.Name}'s Speed increases by 2. Speed: {player.Speed}\n");
-            });
+            }
+        );
 
         public static readonly Item LuckCharm = new Item(
             "Luck Charm",
@@ -170,7 +185,8 @@ namespace JungleSurvivalRPG
             {
                 player.Luck += 2;
                 Printer.PrintSlow($"{player.Name}'s Luck increases by 2. Luck: {player.Luck}\n");
-            });
+            }
+        );
 
         public static readonly Item Rat = new Item(
             "Rat",
@@ -179,7 +195,8 @@ namespace JungleSurvivalRPG
             {
                 Printer.PrintSlow($"{player.Name} is scratched by the Rat.\n");
                 player.HP = Math.Max(0f, player.HP - 10);
-            });
+            }
+        );
 
         public static readonly Item EmptyWaterFlask = new Item(
             "Empty Water Flask",
@@ -188,7 +205,8 @@ namespace JungleSurvivalRPG
             {
                 Printer.PrintSlow($"{player.Name} found no water :c \n");
                 player.Inventory.Add(EmptyWaterFlask);
-            });
+            }
+        );
 
         public static readonly Item TreasureMap = new Item(
             "Treasure Map",
@@ -196,11 +214,14 @@ namespace JungleSurvivalRPG
             player =>
             {
                 Printer.PrintSlow($"{player.Name} studies the Treasure Map. It might lead to something valuable!\n");
-                Printer.PrintSlow("To find the treasure, follow the river's bend,\n" +
-                                  "Where the ancient tree stands tall and grand.\n" +
-                                  "Beneath its roots, the secret lies,\n" +
-                                  "Dig deep and claim your prize!\n");
-            });
+                Printer.PrintSlow(
+                    "To find the treasure, follow the river's bend,\n" +
+                    "Where the ancient tree stands tall and grand.\n" +
+                    "Beneath its roots, the secret lies,\n" +
+                    "Dig deep and claim your prize!\n"
+                );
+            }
+        );
 
         public static readonly Item PoisonDagger = new Item(
             "Poison Dagger",
@@ -208,8 +229,11 @@ namespace JungleSurvivalRPG
             player =>
             {
                 player.ApplyPoison(20, 5);
-                Printer.PrintSlow($"{player.Name} uses the Poison Dagger. The target will take 20 poison damage over the next 5 turns.\n");
-            });
+                Printer.PrintSlow(
+                    $"{player.Name} uses the Poison Dagger. The target will take 20 poison damage over the next 5 turns.\n"
+                );
+            }
+        );
 
         public static readonly Item Fish = new Item(
             "Fish",
@@ -218,7 +242,6 @@ namespace JungleSurvivalRPG
             {
                 Console.WriteLine($"{player.Name} You have eaten the poor fish.\n");
                 player.HP = Math.Min(100f, player.HP + 10);
-                // Random chance of food poisoning, account for luck(^ luck means lower chance of getting unfavorable outcomes)
                 Random random = new Random();
                 if (random.Next(0, 100) < (20 - player.Luck * 2)) // 20% chance minus luck factor
                 {
@@ -229,7 +252,8 @@ namespace JungleSurvivalRPG
                 {
                     Console.WriteLine($"{player.Name} feels fine after eating the fish.\n");
                 }
-            });
+            }
+        );
 
         public static readonly Item CookedFish = new Item(
             "Cooked Fish",
@@ -238,16 +262,16 @@ namespace JungleSurvivalRPG
             {
                 Printer.PrintSlow($"{player.Name} You have eaten the cooked fish.\n");
                 player.HP = Math.Min(100f, player.HP + 30);
-            });
+            }
+        );
 
         public static readonly Item Grimwore = new Item(
             "Grimwore",
             "A mysterious item that has ancient spells inscribed on it.",
             player =>
             {
-                float experience = player.Experience;
+                int experience = player.Experience;
 
-                // Initialize unlocked spells based on experience
                 if (experience >= 0)
                 {
                     player.UnlockSpell("Healing");
@@ -282,29 +306,13 @@ namespace JungleSurvivalRPG
                 if (!player.Inventory.Contains(ItemCatalog.Grimwore))
                     player.Inventory.Add(ItemCatalog.Grimwore);
 
-                // Display unlocked spells
                 Printer.PrintSlow("Unlocked Spells:\n");
                 foreach (var spell in player.UnlockedSpells)
                 {
                     Printer.PrintSlow($"- {spell}\n");
                 }
-            });
-
-        public class Spell
-        {
-            public int Index { get; }
-            public string Name { get; }
-            public string Description { get; }
-            public int ManaCost { get; }
-
-            public Spell(int index, string name, string description, int manaCost)
-            {
-                Index = index;
-                Name = name;
-                Description = description;
-                ManaCost = manaCost;
             }
-        }
+        );
 
         public static readonly List<Item> All = new List<Item>
         {
@@ -327,5 +335,8 @@ namespace JungleSurvivalRPG
             RadioBatteries,
             DeadRadio
         };
+
+        // Add KnownItems so GameEngine can use it
+        public static readonly List<Item> KnownItems = new List<Item>();
     }
 }

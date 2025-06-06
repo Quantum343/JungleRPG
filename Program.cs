@@ -10,97 +10,106 @@ namespace JungleSurvivalRPG
     {
         public int Defence { get; set; }
         public int Strength { get; set; }
-        public int Speed   { get; set; }
-        public int Luck    { get; set; }
+        public int Speed { get; set; }
+        public int Luck { get; set; }
         public Armor(int defence, int strength, int speed, int luck)
         {
-            Defence = defence; Strength = strength; Speed = speed; Luck = luck;
+            Defence = defence;
+            Strength = strength;
+            Speed = speed;
+            Luck = luck;
         }
     }
 
     public class Weapon
-{
-    public int HeavyManaAttack { get; set; }
-    public string HeavyManaAttackName { get; set; }
-    public int LightManaAttack { get; set; }
-    public string LightManaAttackName { get; set; }
-    public int Speed { get; set; }
-    public int Strength { get; set; }
-    public string Description { get; set; }
-    public int RegularAttack { get; set; } // New property
-
-    public Weapon(int heavyManaAttack, string heavyManaAttackName, int lightManaAttack, string lightManaAttackName,
-                  int speed, int strength, string description, int regularAttack)
     {
-        HeavyManaAttack = heavyManaAttack;
-        HeavyManaAttackName = heavyManaAttackName;
-        LightManaAttack = lightManaAttack;
-        LightManaAttackName = lightManaAttackName;
-        Speed = speed;
-        Strength = strength;
-        Description = description;
-        RegularAttack = regularAttack;
-    }
-}
+        public int HeavyManaAttack { get; set; }
+        public string HeavyManaAttackName { get; set; }
+        public int LightManaAttack { get; set; }
+        public string LightManaAttackName { get; set; }
+        public int Speed { get; set; }
+        public int Strength { get; set; }
+        public string Description { get; set; }
+        public int RegularAttack { get; set; } // New property
 
+        public Weapon(
+            int heavyManaAttack,
+            string heavyManaAttackName,
+            int lightManaAttack,
+            string lightManaAttackName,
+            int speed,
+            int strength,
+            string description,
+            int regularAttack
+        )
+        {
+            HeavyManaAttack = heavyManaAttack;
+            HeavyManaAttackName = heavyManaAttackName;
+            LightManaAttack = lightManaAttack;
+            LightManaAttackName = lightManaAttackName;
+            Speed = speed;
+            Strength = strength;
+            Description = description;
+            RegularAttack = regularAttack;
+        }
+    }
 
     public static class Equipment
     {
-        public static Armor None = new Armor(0, 0, 0, 0); // No armor equipped
-        public static Weapon None = new Weapon(0, "", 0, "", 0, 0, "No weapon equipped", 0); // No weapon equipped
-        public static Armor BarkhideVest = new Armor(8, 2, -1, 1); // Balanced LVL5
-        public static Armor WornScoutJacket = new Armor(6, 1, 0, 2); // Nimble, higher luck/speed LVL20
-        public static Armor IronScaleMail = new Armor(20, 5, -5, 2); // Heavy defense
-        public static Armor RogueTunic = new Armor(14, 3, -1, 6); // Agile, higher luck/speed
-        public static Armor PhantomCoat = new Armor(35, 15, 5, 4); // Stealth-focused, decent all-around LVL35
-        public static Armor BattleForgedPlates = new Armor(40, 9, 2, 2); // Tankier variant
-        public static Armor DrakeskinPlate = new Armor(55, 15, 0, 6); // Sturdy, magical resistance implied LVL60
-        public static Armor ValkyrieShroud = new Armor(48, 11, 7, 10); // Luck and speed boosted
-        public static Armor RadiantPlate = new Armor(70, 18, 0, 10); // Light-infused, aura-based defense LV90
-        public static Armor ShadowRaiment = new Armor(60, 22, 14, 8); // Shadow-enhanced, offensive agility
-        public static Weapon RustyDagger = new Weapon(0, "", 0, "", 1, 3, "Rusty dagger", 5);  
-               
-      
+        public static Armor NoArmor = new Armor(0, 0, 0, 0); // No armor equipped
+        public static Weapon NoWeapon = new Weapon(0, "", 0, "", 0, 0, "No weapon equipped", 0); // No weapon equipped
+
+        public static Armor BarkhideVest = new Armor(8, 2, -1, 1);            // Balanced LVL5
+        public static Armor WornScoutJacket = new Armor(6, 1, 0, 2);          // Nimble, higher luck/speed LVL20
+        public static Armor IronScaleMail = new Armor(20, 5, -5, 2);          // Heavy defense
+        public static Armor RogueTunic = new Armor(14, 3, -1, 6);             // Agile, higher luck/speed
+        public static Armor PhantomCoat = new Armor(35, 15, 5, 4);            // Stealth-focused, decent all-around LVL35
+        public static Armor BattleForgedPlates = new Armor(40, 9, 2, 2);      // Tankier variant
+        public static Armor DrakeskinPlate = new Armor(55, 15, 0, 6);         // Sturdy, magical resistance implied LVL60
+        public static Armor ValkyrieShroud = new Armor(48, 11, 7, 10);        // Luck and speed boosted
+        public static Armor RadiantPlate = new Armor(70, 18, 0, 10);          // Light-infused, aura-based defense LV90
+        public static Armor ShadowRaiment = new Armor(60, 22, 14, 8);         // Shadow-enhanced, offensive agility
+
+        public static Weapon RustyDagger = new Weapon(0, "", 0, "", 1, 3, "Rusty dagger", 5);
     }
 
     public class Enemy
-{
-    public string Name { get; set; }
-    public int HP { get; set; }
-    public int AttackPower { get; set; }
-    public int Defence { get; set; }
-    public int Speed { get; set; }
-
-    public Enemy(string name, int hp, int attackPower, int defence = 0, int speed = 5)
     {
-        Name = name;
-        HP = hp;
-        AttackPower = attackPower;
-        Defence = defence;
-        Speed = speed;
+        public string Name { get; set; }
+        public int HP { get; set; }
+        public int AttackPower { get; set; }
+        public int Defence { get; set; }
+        public int Speed { get; set; }
+
+        public Enemy(string name, int hp, int attackPower, int defence = 0, int speed = 5)
+        {
+            Name = name;
+            HP = hp;
+            AttackPower = attackPower;
+            Defence = defence;
+            Speed = speed;
+        }
     }
-}
 
-
-     public class BossEnemy
-{
-    public string Name { get; set; }
-    public int HP { get; set; }
-    public int AttackPower { get; set; }
-    public string spAttackName { get; set; }
-    public int specialmove { get; set; }
-    public int Defence { get; set; }
-
-    public BossEnemy(string name, int hp, int attackPower, string spAttackName, int specialmove, int defence)
+    public class BossEnemy
     {
-        Name = name;
-        HP = hp;
-        AttackPower = attackPower;
-        this.spAttackName = spAttackName;
-        this.specialmove = specialmove;
-        Defence = defence;
+        public string Name { get; set; }
+        public int HP { get; set; }
+        public int AttackPower { get; set; }
+        public string spAttackName { get; set; }
+        public int specialmove { get; set; }
+        public int Defence { get; set; }
+
+        public BossEnemy(string name, int hp, int attackPower, string spAttackName, int specialmove, int defence)
+        {
+            Name = name;
+            HP = hp;
+            AttackPower = attackPower;
+            this.spAttackName = spAttackName;
+            this.specialmove = specialmove;
+            Defence = defence;
+        }
     }
-}
 
     public struct SceneID
     {
@@ -122,7 +131,7 @@ namespace JungleSurvivalRPG
         }
     }
 
-     public class Player
+    public class Player
     {
         public string Name { get; set; }
         public float HP { get; set; }
@@ -131,16 +140,29 @@ namespace JungleSurvivalRPG
         public float Mana { get; set; }
         public int Speed { get; set; }
         public int Strength { get; set; }
-        public Weapon EquippedWeapon { get; set; } = Equipment.None; // Default no weapon equipped
+
+        public Weapon EquippedWeapon { get; set; } = Equipment.NoWeapon; // Default no weapon equipped
+        public Armor EquippedArmor { get; set; } = Equipment.NoArmor;    // Default no armor equipped
+
         public List<Item> Inventory { get; } = new();
         public bool HasFoundPage2 { get; set; } = false;
-        public Armor EquippedArmor{get;set;}= Armor.None; // Default no armor equipped
+
+        // For Grimwore usage
+        public int Experience { get; set; } = 0;
+        public List<string> UnlockedSpells { get; } = new();
+
+        // To store list of known/previously found items
+        private List<Item> knownItems = new List<Item>();
 
         public Player(string name)
         {
             Name = name;
-            HP = 100f; Defence = 5f; Luck = 1;
-            Mana = 20f; Speed = 4; Strength = 5;
+            HP = 100f;
+            Defence = 5f;
+            Luck = 1;
+            Mana = 20f;
+            Speed = 4;
+            Strength = 5;
             Inventory.Add(ItemCatalog.EmptyWaterFlask);
         }
 
@@ -151,12 +173,18 @@ namespace JungleSurvivalRPG
             Strength += 5;
         }
 
-        public int Attack() => Weapon.regularAttack;
+        public int Attack() => EquippedWeapon.RegularAttack;
+
+        public void UnlockSpell(string spell)
+        {
+            if (!UnlockedSpells.Contains(spell))
+                UnlockedSpells.Add(spell);
+        }
 
         public void TakeDamage(float dmg)
         {
-            float instanceDef=Player.defence+Player.Armor.defence;
-            int net = Math.Max(0, dmg - instanceDef);
+            float instanceDef = Defence + EquippedArmor.Defence;
+            int net = (int)Math.Max(0f, dmg - instanceDef);
             HP -= net;
             Console.WriteLine($"{Name} takes {net} damage. HP: {HP}\n");
         }
@@ -168,6 +196,7 @@ namespace JungleSurvivalRPG
                 Console.WriteLine("Inventory is empty.");
                 return;
             }
+
             int idx = 0;
             ConsoleKey key;
             do
@@ -209,29 +238,22 @@ namespace JungleSurvivalRPG
                 Thread.Sleep(delay);
             }
         }
+
         public static void ShowProgressBar()
-
         {
-
             for (int i = 0; i <= 100; i += 10)
-
             {
-
                 Console.Write($"[{new string('#', i / 10)}{new string(' ', 10 - i / 10)}] {i}%\r");
-
                 Thread.Sleep(100);
-
             }
-
             Console.WriteLine();
-
         }
+
         public static void ClearScreen()
         {
             Console.Clear();
         }
     }
-    
 
     public class GameEngine
     {
@@ -240,7 +262,6 @@ namespace JungleSurvivalRPG
         private List<Enemy> enemies = new();
         private SceneID current;
         private SceneID lastScene;
-
 
         public void Start()
         {
@@ -331,13 +352,13 @@ namespace JungleSurvivalRPG
                     if (player.Inventory.Remove(ItemCatalog.EmptyWaterFlask))
                     {
                         player.Inventory.Add(ItemCatalog.WaterFlask);
-                        if (!player.Inventory.Contains(ItemCatalog.Grimoire))
-                            {
-                            player.Inventory.Add(ItemCatalog.Grimoire); // Add grimoire to inventory
-                            }
+                        // Add Grimwore (not “Grimoire”)
+                        if (!player.Inventory.Contains(ItemCatalog.Grimwore))
+                        {
+                            player.Inventory.Add(ItemCatalog.Grimwore);
+                        }
                         Console.WriteLine("You filled your flask! It’s now a full Water Flask.\n");
-                        Console.WriteLine("You have found a book with leaking mana.\n" +
-                            "Its a grimwoire");
+                        Console.WriteLine("You have found a book with leaking mana. It’s a Grimwore.");
                     }
                     else
                     {
@@ -389,21 +410,18 @@ namespace JungleSurvivalRPG
             // ── CATCH FISH (treasure map) ────────────────────────────────────────────
             scenes[new SceneID(1, 9)] = new Scene(
                 "You try to catch a fish...\n" +
-                "You hold onto it and discover a treasure map inside!\n" +
-                "The fish slips away into the murky water.\n" +
                 "1) Continue.\n" +
                 "0) Go back.\n",
                 player =>
                 {
                     if (player.Inventory.Contains(ItemCatalog.TreasureMap))
                     {
-                        //random chance to find nothing or fish in exchange for mana
                         Random rng = new Random();
                         int chance = rng.Next(1, 101);
                         if (chance <= 50) // 50% chance to find nothing
                         {
                             Console.WriteLine("You found nothing but mud and weeds. You tired yourself mentally -10 Mana \n");
-                            player.Mana = Math.Max(0, player.Mana - 10);
+                            player.Mana = Math.Max(0f, player.Mana - 10);
                         }
                         else
                         {
@@ -425,9 +443,8 @@ namespace JungleSurvivalRPG
             // ── RADIO – EXAMINE (scene 1.11) ─────────────────────────────────────────
             scenes[new SceneID(1, 11)] = new Scene(
                 "The radio screen is dark.\n" +
-                "1) Try to power it on.\n" +
-                "0) Go back.\n"
-            );
+                "1) Try to power it on.\n" 
+        );
             scenes[new SceneID(1, 11)].Choices[1] = new SceneID(1, 12);
 
             // ── RADIO – USE ITEM (scene 1.12) ────────────────────────────────────────
@@ -435,7 +452,6 @@ namespace JungleSurvivalRPG
                 "You try to power on the radio...\n" +
                 string.Empty,
                 p => ItemCatalog.DeadRadio.Use(p)     // attempt power-on
-
             );
             scenes[new SceneID(1, 12)].Choices[1] = new SceneID(1, 1);    // return to start
 
@@ -468,23 +484,20 @@ namespace JungleSurvivalRPG
                     player.Inventory.Add(ItemCatalog.TreasureMap);
                     player.Inventory.Add(ItemCatalog.LootBox);
                 }
-
             );
 
-            //Crafting table found at the treehouse
+            // Crafting table found at the treehouse
             scenes[new SceneID(10, 1)].Text +=
-            "You find a Crafting Table here.....\n" +
+                "You find a Crafting Table here.....\n" +
                 "1) Use the Crafting Table.\n" +
                 "2) Return to the clearing.\n" +
                 "3) Open Inventory.\n";
             scenes[new SceneID(10, 1)].Choices[0] = new SceneID(10, 2); // Crafting table scene
             scenes[new SceneID(10, 1)].Choices[1] = new SceneID(2, 1); // Return to clearing
-
-    
-
         }
-      private void Run()
-       {
+
+        private void Run()
+        {
             while (true)
             {
                 // — Combat trigger (Act -1) —
@@ -534,21 +547,18 @@ namespace JungleSurvivalRPG
 
                 // Add obtained items to list of known items
                 ItemCatalog.KnownItems.AddRange(player.Inventory);
-                
-                
             }
         }
 
-            private void StartCombat(Enemy enemy)
+        private void StartCombat(Enemy enemy)
         {
             Console.WriteLine($"A wild {enemy.Name} appears!\n");
-            int instancespeed=player.Speed+Weapon.speed+player.EquippedArmor.Speed; 
 
-            bool playerGoesFirst = instancespeed >= enemy.Speed;
+            int instanceSpeed = player.Speed + player.EquippedWeapon.Speed + player.EquippedArmor.Speed;
+            bool playerGoesFirst = instanceSpeed >= enemy.Speed;
 
             while (player.HP > 0 && enemy.HP > 0)
             {
-                // Player Turn
                 if (playerGoesFirst)
                 {
                     PlayerAction(enemy);
@@ -572,13 +582,14 @@ namespace JungleSurvivalRPG
             Console.WriteLine($"You defeated the {enemy.Name}!\n");
         }
 
-         private void PlayerAction(Enemy enemy)
+        private void PlayerAction(Enemy enemy)
         {
             Console.WriteLine("Choose your action:");
             Console.WriteLine("1) Normal Attack");
-            
-            bool hasManaWeapon = player.EquippedWeapon.HeavyManaAttack > 0 || 
-                                player.EquippedWeapon.LightManaAttack > 0;
+
+            bool hasManaWeapon =
+                player.EquippedWeapon.HeavyManaAttack > 0 ||
+                player.EquippedWeapon.LightManaAttack > 0;
 
             if (hasManaWeapon)
             {
@@ -592,43 +603,43 @@ namespace JungleSurvivalRPG
 
             int totalDamage = 0;
             var weapon = player.EquippedWeapon;
-            float instanceSTR=weapon.Strength+player.Strength+player.EquippedArmor.Strength;
+            float instanceSTR = weapon.Strength + player.Strength + player.EquippedArmor.Strength;
 
             switch (cmd)
             {
                 case "1":
                     totalDamage = (int)(weapon.RegularAttack * (1 + (instanceSTR / 100.0f)));
                     Console.WriteLine($"You strike {enemy.Name} with your {weapon.Description} for {totalDamage} damage!");
-                    totalDamage= totalDamage-enemy.Defence;
-                    enemy.HP -= totalDamage;
+                    totalDamage -= enemy.Defence;
+                    enemy.HP -= Math.Max(0, totalDamage);
                     break;
-                    
+
                 case "2" when hasManaWeapon:
                     totalDamage = (int)(weapon.LightManaAttack * (1 + (instanceSTR / 100.0f)));
                     Console.WriteLine($"You cast {weapon.LightManaAttackName} on {enemy.Name} for {totalDamage} damage!");
-                    totalDamage= totalDamage-enemy.Defence;
-                    enemy.HP -= totalDamage;
+                    totalDamage -= enemy.Defence;
+                    enemy.HP -= Math.Max(0, totalDamage);
                     break;
-                    
+
                 case "3" when hasManaWeapon:
                     totalDamage = (int)(weapon.HeavyManaAttack * (1 + (instanceSTR / 100.0f)));
                     Console.WriteLine($"You unleash {weapon.HeavyManaAttackName} on {enemy.Name} for {totalDamage} damage!");
-                    totalDamage= totalDamage-enemy.Defence;
-                    enemy.HP -= totalDamage;
+                    totalDamage -= enemy.Defence;
+                    enemy.HP -= Math.Max(0, totalDamage);
                     break;
-                    
+
                 case "4":
                     Console.WriteLine("You fled back to the previous scene.\n");
                     Environment.Exit(0);
                     break;
-                    
+
                 default:
                     Console.WriteLine("Invalid choice. You fumble your turn.");
                     break;
             }
         }
 
-       private void EnemyAction(Enemy enemy)
+        private void EnemyAction(Enemy enemy)
         {
             float incomingDamage = Math.Max(0, enemy.AttackPower - (int)player.Defence);
 
@@ -647,7 +658,7 @@ namespace JungleSurvivalRPG
                     return;
                 }
                 Console.WriteLine("Dodge failed!");
-                incomingDamage=incomingDamage*1.5;
+                incomingDamage = incomingDamage * 1.5f;
             }
 
             player.TakeDamage(incomingDamage);
@@ -662,6 +673,4 @@ namespace JungleSurvivalRPG
             new GameEngine().Start();
         }
     }
-} 
-       
-
+}
