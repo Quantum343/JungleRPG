@@ -76,12 +76,12 @@ namespace JungleSurvivalRPG
     public class Enemy
     {
         public string Name { get; set; }
-        public int HP { get; set; }
+        public float HP { get; set; }
         public int AttackPower { get; set; }
         public int Defence { get; set; }
         public int Speed { get; set; }
 
-        public Enemy(string name, int hp, int attackPower, int defence = 0, int speed = 5)
+        public Enemy(string name, float hp, int attackPower, int defence = 0, int speed = 5)
         {
             Name = name;
             HP = hp;
@@ -94,13 +94,14 @@ namespace JungleSurvivalRPG
     public class BossEnemy
     {
         public string Name { get; set; }
-        public int HP { get; set; }
+        public float HP { get; set; }
         public int AttackPower { get; set; }
         public string spAttackName { get; set; }
         public int specialmove { get; set; }
         public int Defence { get; set; }
+        public int Speed{ get; set; }
 
-        public BossEnemy(string name, int hp, int attackPower, string spAttackName, int specialmove, int defence)
+        public BossEnemy(string name, float hp, int attackPower, string spAttackName, int specialmove, int defence, int Speed)
         {
             Name = name;
             HP = hp;
@@ -108,6 +109,7 @@ namespace JungleSurvivalRPG
             this.spAttackName = spAttackName;
             this.specialmove = specialmove;
             Defence = defence;
+            this.Speed = Speed;
         }
     }
 
@@ -260,6 +262,7 @@ namespace JungleSurvivalRPG
         private Player player = null!;
         private Dictionary<SceneID, Scene> scenes = null!;
         private List<Enemy> enemies = new();
+        private List<BossEnemy> boss = new();
         private SceneID current;
         private SceneID lastScene;
 
@@ -279,8 +282,8 @@ namespace JungleSurvivalRPG
 
         private void InitializeEnemies()
         {
-            enemies.Add(new Enemy("Panther", 50, 10, 3, 8));
-            enemies.Add(new Enemy("Snake", 30, 5, 2, 10));
+            enemies.Add(new Enemy("Panther", 50f, 10, 3, 8));
+            enemies.Add(new Enemy("Snake", 30f, 5, 2, 10));
         }
 
         private void BuildScenes()
@@ -443,7 +446,7 @@ namespace JungleSurvivalRPG
             // ── RADIO – EXAMINE (scene 1.11) ─────────────────────────────────────────
             scenes[new SceneID(1, 11)] = new Scene(
                 "The radio screen is dark.\n" +
-                "1) Try to power it on.\n" 
+                "1) Try to power it on.\n"
         );
             scenes[new SceneID(1, 11)].Choices[1] = new SceneID(1, 12);
 
@@ -556,20 +559,28 @@ namespace JungleSurvivalRPG
 
             int instanceSpeed = player.Speed + player.EquippedWeapon.Speed + player.EquippedArmor.Speed;
             bool playerGoesFirst = instanceSpeed >= enemy.Speed;
+            int round = 0;
+            float playerdamage=0f;
 
             while (player.HP > 0 && enemy.HP > 0)
             {
                 if (playerGoesFirst)
                 {
-                    PlayerAction(enemy);
+                    playerdamage=PlayerAction(round,out _);
+                    playerdamage -= enemy.Defence;
+                    enemy.HP -= Math.Max(0, playerdamage);
                     if (enemy.HP <= 0) break;
                     EnemyAction(enemy);
+                    round++;
                 }
                 else
                 {
                     EnemyAction(enemy);
                     if (player.HP <= 0) break;
-                    PlayerAction(enemy);
+                    playerdamage=PlayerAction(round,out _ );
+                    playerdamage -= enemy.Defence;
+                    enemy.HP -= Math.Max(0, playerdamage);
+                    round++;
                 }
             }
 
@@ -581,62 +592,126 @@ namespace JungleSurvivalRPG
 
             Console.WriteLine($"You defeated the {enemy.Name}!\n");
         }
+        
+         private void StartCombat2(BossEnemy boss)
+{
+    Console.WriteLine($"A wild {boss.Name} appears!\n");
 
-        private void PlayerAction(Enemy enemy)
+    int instanceSpeed = player.Speed + player.EquippedWeapon.Speed + player.EquippedArmor.Speed;
+    bool playerGoesFirst = instanceSpeed >= boss.Speed;
+    int round = 0;
+
+    Random rng = new Random();
+
+    while (player.HP > 0 && boss.HP > 0)
+    {
+        if (playerGoesFirst)
         {
+            float playerDamage = PlayerAction(round, out bool isHeavyMana);
+
+            // Boss has a 25% chance to dodge non-heavy mana attacks
+            if (!isHeavyMana && rng.Next(1, 101) <= 25)
+            {
+                Console.WriteLine($"{boss.Name} dodged your attack!");
+            }
+            else
+            {
+                playerDamage -= boss.Defence;
+                boss.HP -= Math.Max(0, playerDamage);
+            }
+
+            if (boss.HP <= 0) break;
+
+            BossEnemyAction(boss);
+            round++;
+        }
+        else
+        {
+            BossEnemyAction(boss);
+            if (player.HP <= 0) break;
+
+            float playerDamage = PlayerAction(round, out bool isHeavyMana);
+
+            if (!isHeavyMana && rng.Next(1, 101) <= 25)
+            {
+                Console.WriteLine($"{boss.Name} dodged your attack!");
+            }
+            else
+            {
+                playerDamage -= boss.Defence;
+                boss.HP -= Math.Max(0, playerDamage);
+            }
+
+            round++;
+        }
+    }
+
+    if (player.HP <= 0)
+    {
+        Console.WriteLine("You have been defeated...\n");
+        Environment.Exit(0);
+    }
+
+    Console.WriteLine($"You defeated the {boss.Name}!\n");
+}
+
+
+        
+
+        private float PlayerAction(int round, out bool isHeavyMana)
+        {
+            isHeavyMana = false;
             Console.WriteLine("Choose your action:");
             Console.WriteLine("1) Normal Attack");
 
-            bool hasManaWeapon =
-                player.EquippedWeapon.HeavyManaAttack > 0 ||
-                player.EquippedWeapon.LightManaAttack > 0;
+            var weapon = player.EquippedWeapon;
+            bool hasManaWeapon = weapon.HeavyManaAttack > 0 || weapon.LightManaAttack > 0;
+
+            bool canUseLightMana = (round % 3) < 2;
+            bool canUseHeavyMana = round % 6 == 0;
 
             if (hasManaWeapon)
             {
-                Console.WriteLine("2) Light Mana Attack");
-                Console.WriteLine("3) Heavy Mana Attack");
+                Console.WriteLine(canUseLightMana ? "2) Light Mana Attack" : "2) Light Mana Attack (Not available)");
+                Console.WriteLine(canUseHeavyMana ? "3) Heavy Mana Attack" : "3) Heavy Mana Attack (Not available)");
             }
-            Console.WriteLine("4) Flee");
 
+            Console.WriteLine("4) Flee");
             Console.Write("Action: ");
             var cmd = Console.ReadLine() ?? "";
 
-            int totalDamage = 0;
-            var weapon = player.EquippedWeapon;
+            float totalDamage = 0;
             float instanceSTR = weapon.Strength + player.Strength + player.EquippedArmor.Strength;
 
             switch (cmd)
             {
                 case "1":
                     totalDamage = (int)(weapon.RegularAttack * (1 + (instanceSTR / 100.0f)));
-                    Console.WriteLine($"You strike {enemy.Name} with your {weapon.Description} for {totalDamage} damage!");
-                    totalDamage -= enemy.Defence;
-                    enemy.HP -= Math.Max(0, totalDamage);
+                    Console.WriteLine($"You strike the enemy with your weapon for {totalDamage} damage!");
                     break;
 
-                case "2" when hasManaWeapon:
+                case "2" when hasManaWeapon && canUseLightMana:
                     totalDamage = (int)(weapon.LightManaAttack * (1 + (instanceSTR / 100.0f)));
-                    Console.WriteLine($"You cast {weapon.LightManaAttackName} on {enemy.Name} for {totalDamage} damage!");
-                    totalDamage -= enemy.Defence;
-                    enemy.HP -= Math.Max(0, totalDamage);
+                    Console.WriteLine($"You strike the enemy with {weapon.LightManaAttackName} on for {totalDamage} damage!");
                     break;
 
-                case "3" when hasManaWeapon:
+                case "3" when hasManaWeapon && canUseHeavyMana:
+                    isHeavyMana = true;
                     totalDamage = (int)(weapon.HeavyManaAttack * (1 + (instanceSTR / 100.0f)));
-                    Console.WriteLine($"You unleash {weapon.HeavyManaAttackName} on {enemy.Name} for {totalDamage} damage!");
-                    totalDamage -= enemy.Defence;
-                    enemy.HP -= Math.Max(0, totalDamage);
+                    Console.WriteLine($"You unleash {weapon.HeavyManaAttackName} on for {totalDamage} damage!");
                     break;
 
                 case "4":
                     Console.WriteLine("You fled back to the previous scene.\n");
                     Environment.Exit(0);
-                    break;
+                    return totalDamage;
 
                 default:
-                    Console.WriteLine("Invalid choice. You fumble your turn.");
-                    break;
+                    Console.WriteLine("Invalid choice or move unavailable. You fumble your turn.");
+                    return totalDamage;
             }
+
+            return totalDamage;
         }
 
         private void EnemyAction(Enemy enemy)
@@ -664,6 +739,47 @@ namespace JungleSurvivalRPG
             player.TakeDamage(incomingDamage);
             Console.WriteLine($"{enemy.Name} hits you for {incomingDamage} damage.\n");
         }
+        
+        private void BossEnemyAction(BossEnemy boss)
+{
+    float incomingDamage;
+    Random rng = new Random();
+    int attackChoice = rng.Next(1, 3); // 1 = regular, 2 = special
+
+    Console.WriteLine($"{boss.Name} is preparing an attack!");
+
+    if (attackChoice == 2)
+    {
+        incomingDamage = boss.specialmove - player.Defence;
+        Console.WriteLine($"{boss.Name} uses their special attack: {boss.spAttackName}!");
+    }
+    else
+    {
+        incomingDamage = boss.AttackPower - player.Defence;
+        Console.WriteLine($"{boss.Name} performs a regular attack!");
+    }
+
+    incomingDamage = Math.Max(0, incomingDamage);
+
+    Console.WriteLine("Do you want to try to dodge? (y/n): ");
+    string dodge = Console.ReadLine()?.ToLower() ?? "n";
+
+    if (dodge == "y")
+    {
+        int chance = rng.Next(1, 101);
+        if (chance <= player.Luck)
+        {
+            Console.WriteLine("You dodged the attack!");
+            return;
+        }
+        Console.WriteLine("Dodge failed!");
+        incomingDamage *= 1.5f;
+    }
+
+    player.TakeDamage(incomingDamage);
+    Console.WriteLine($"{boss.Name} hits you for {incomingDamage} damage.\n");
+}
+
     }
 
     class Program
