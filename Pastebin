@@ -31,3 +31,83 @@ public static ChestArmor BarkhideVest = new ChestArmor(8, 2, -1, 1); // Balanced
             strength:              4,
             heavyAttackDescription:"Unleashes a barage of trauma causing pokes to the eye."
         );
+
+        story:
+        Jungle Survival RPG — Full Story Outline
+Act 1: Awakening and Exploration
+Setting: You wake up on a sandy riverbank with a mysterious dead radio beside you, surrounded by dense jungle and strange magical energies.
+
+Start Scene: Player chooses between exploring the forest, following the river, climbing an outcrop, or inspecting the radio.
+
+Purpose: Introduce basic movement, inventory, simple puzzles (like filling the flask), and minor encounters.
+
+Events:
+
+Discovering useful items (e.g., Grimwore book, treasure map).
+
+Meeting small enemies (wild animals, jungle predators).
+
+Unlocking crafting basics at the treehouse.
+
+Mini-boss: First boss fight triggered after following the growl to a clearing — the Panther of the Wilds. (Boss 1: Fast and agile, tests combat basics.)
+
+Act 2: The Mystical Forest Depths
+Setting: After surviving the Panther, you venture deeper into the mystical forest where reality warps and magic pulses in the air.
+
+New Features: Introduce puzzles involving magical glyphs or riddles that guard paths or treasure.
+
+Random Events:
+
+Puzzle traps where failure causes combat with aggressive forest spirits or venomous creatures.
+
+Enchanted shrines offering either blessings or curses, affecting stats or mana.
+
+Finding armor sets: choose between pairs like BarkhideVest (balanced) or WornScoutJacket (nimble).
+
+Side Quests: Follow mysterious whispers or visions leading to hidden caches or lore.
+
+Mini-boss: The Forest Wraith — a spectral guardian with stealth and magic attacks. (Boss 2: Tests player’s magic resistance and dodging.)
+
+Act 3: Ancient Ruins and Trials
+Setting: The forest opens to ancient ruins — remnants of a lost civilization that wielded powerful arcane technology.
+
+Events:
+
+Complex multi-step puzzles involving activating ancient machinery or decoding runes.
+
+Consequences for failure: traps, curses, or immediate death leading to game-over.
+
+Combat against corrupted constructs and guardians.
+
+Discover powerful weapons like StormSplitter or NightReaver.
+
+Random Event: A crafting station allowing combination of rare materials into upgraded gear.
+
+Mini-boss: The Arcane Golem — slow but devastating, with heavy defense and area attacks. (Boss 3: Focus on endurance and strategy.)
+
+Act 4: The Shadowed Peak
+Setting: Climbing a towering mystical mountain where the air crackles with chaotic magic and shadows twist reality.
+
+Challenges:
+
+Final, most difficult puzzles testing everything learned (logic, timing, resource management).
+
+Combat-heavy zones with elite enemies, including shadow assassins and enchanted beasts.
+
+Choice between armor sets like PhantomCoat (stealth) or BattleForgedPlates (tank).
+
+Random Events:
+
+Finding legendary weapons: DragonspineExecutioner, MirrorEdge, or Bloodthirster.
+
+Events offering buffs or debuffs based on player’s choices.
+
+Final Boss: The Voidwalker — a terrifying entity controlling void energy and time. (Boss 4: Ultimate challenge, requires mastering all combat and puzzle skills.)
+
+Finale: Escape from the Jungle
+After defeating the Voidwalker, the forest/mystical jungle begins to collapse or fade.
+
+Player must make a final choice or series of actions to find the exit portal or path back to civilization.
+
+Optional epilogue depending on collected items, decisions, or surviving companions.
+

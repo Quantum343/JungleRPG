@@ -142,6 +142,8 @@ namespace JungleSurvivalRPG
         public float Mana { get; set; }
         public int Speed { get; set; }
         public int Strength { get; set; }
+        public float MaxHP => 100f; // Default max HP
+        public float MaxMana => 60f; // Default max Mana
 
         public Weapon EquippedWeapon { get; set; } = Equipment.NoWeapon; // Default no weapon equipped
         public Armor EquippedArmor { get; set; } = Equipment.NoArmor;    // Default no armor equipped
@@ -159,10 +161,10 @@ namespace JungleSurvivalRPG
         public Player(string name)
         {
             Name = name;
-            HP = 100f;
+            HP = MaxHP;
             Defence = 5f;
             Luck = 1;
-            Mana = 20f;
+            Mana = MaxMana;
             Speed = 4;
             Strength = 5;
             Inventory.Add(ItemCatalog.EmptyWaterFlask);
@@ -284,6 +286,16 @@ namespace JungleSurvivalRPG
         {
             enemies.Add(new Enemy("Panther", 50f, 10, 3, 8));
             enemies.Add(new Enemy("Snake", 30f, 5, 2, 10));
+            BossEnemy panther = new BossEnemy("Panther of the Wilds", 150f, 25, "Shadow Pounce", 1, 10, 40);
+            BossEnemy forestWraith = new BossEnemy("Forest Wraith", 180f, 30, "Spectral Slash", 2, 15, 35);
+            BossEnemy arcaneGolem = new BossEnemy("Arcane Golem", 300f, 40, "Rune Smash", 3, 40, 10);
+            BossEnemy voidwalker = new BossEnemy("The Voidwalker", 500f, 50, "Void Pulse", 4, 30, 45);
+            boss.Add(panther);
+            boss.Add(forestWraith);
+            boss.Add(arcaneGolem);
+            boss.Add(voidwalker);
+
+
         }
 
         private void BuildScenes()
@@ -452,7 +464,8 @@ namespace JungleSurvivalRPG
 
             // ── RADIO – USE ITEM (scene 1.12) ────────────────────────────────────────
             scenes[new SceneID(1, 12)] = new Scene(
-                "You try to power on the radio...\n" +
+                ".........." +
+                "1) Go back.\n" +
                 string.Empty,
                 p => ItemCatalog.DeadRadio.Use(p)     // attempt power-on
             );
@@ -550,6 +563,23 @@ namespace JungleSurvivalRPG
 
                 // Add obtained items to list of known items
                 ItemCatalog.KnownItems.AddRange(player.Inventory);
+
+
+                // Regenerate Mana every 3 seconds by 2 until max Mana reached, Time is imporant
+                if (player.Mana < player.MaxMana)
+                {
+                    for (int i = 0; i < 3 && player.Mana < player.MaxMana; i++)
+                    {
+                        Thread.Sleep(1000); 
+                        player.Mana = Math.Min(player.MaxMana, player.Mana + 2);
+                    }
+                    // Set mana to max mana if it exceeds it
+                    if (player.Mana > player.MaxMana)
+                    {
+                        player.Mana = player.MaxMana;
+                    }
+                }
+
             }
         }
 

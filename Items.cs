@@ -267,52 +267,83 @@ namespace JungleSurvivalRPG
 
         public static readonly Item Grimwore = new Item(
             "Grimwore",
-            "A mysterious item that has ancient spells inscribed on it.",
+            "A mysterious tome of jungle magic—you can cast any unlocked spell from it.",
             player =>
             {
-                int experience = player.Experience;
+                player.Inventory.Add(Grimwore); //Add back
+                // -- Unlocking logic lives elsewhere; assume player.UnlockedSpells is up to date --
 
-                if (experience >= 0)
+                // Build a list of Spell objects the player actually has unlocked:
+                var available = SpellCatalog.AllSpells
+                    .Where(sp => player.UnlockedSpells.Contains(sp.Name))
+                    .ToList();
+                if (available.Count == 0)
                 {
-                    player.UnlockSpell("Healing");
-                    player.UnlockSpell("Flame");
-                }
-                if (experience >= 30)
-                {
-                    player.UnlockSpell("Manifestation");
-                    player.UnlockSpell("Sin of Gluttony");
-                }
-                if (experience >= 50)
-                {
-                    player.UnlockSpell("Sin of Greed");
-                    player.UnlockSpell("Sin of Sloth");
-                }
-                if (experience >= 70)
-                {
-                    player.UnlockSpell("Sin of Lust");
-                }
-                if (experience >= 100)
-                {
-                    player.UnlockSpell("Earthquake");
-                    player.UnlockSpell("Tornado");
-                }
-                if (experience >= 120)
-                {
-                    player.UnlockSpell("Fireball");
-                    player.UnlockSpell("Lightning Strike");
+                    Console.WriteLine("You haven’t learned any spells yet. Explore more to unlock them!");
+                    return;
                 }
 
-                Printer.PrintSlow($"{player.Name} feels energized by the mana.\n");
-                if (!player.Inventory.Contains(ItemCatalog.Grimwore))
+                // UI navigation
+                int idx = 0;
+                ConsoleKey key;
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("-- Spellbook --");
+                    for (int i = 0; i < available.Count; i++)
+                    {
+                        Console.Write(i == idx ? "> " : "  ");
+                        Console.WriteLine(available[i].Name);
+                    }
+                    var cur = available[idx];
+                    Console.WriteLine($"\n{cur.Description}\nCost: {cur.ManaCost} Mana");
+                    Console.WriteLine("\nUse ↑/↓ to navigate, Enter to cast, Backspace to exit.");
+                    key = Console.ReadKey(true).Key;
+                    if (key == ConsoleKey.UpArrow)
+                        idx = (idx - 1 + available.Count) % available.Count;
+                    else if (key == ConsoleKey.DownArrow)
+                        idx = (idx + 1) % available.Count;
+                }
+                while (key != ConsoleKey.Enter && key != ConsoleKey.Backspace);
+
+                // If they pressed Enter, attempt to cast
+                if (key == ConsoleKey.Enter)
+                {
+                    var chosen = available[idx];
+                    if (player.Mana >= chosen.ManaCost)
+                    {
+                        player.Mana -= chosen.ManaCost;
+                        Printer.PrintSlow($"{player.Name} casts {chosen.Name}!\n");
+
+                        // example stub effects; expand per spell name:
+                        switch (chosen.Name)
+                        {
+                            case "Healing":
+                                player.HP = Math.Min(100f, player.HP + 30f);
+                                Printer.PrintSlow($"→ Restored 30 HP. (HP: {player.HP})\n");
+                                break;
+                            case "Flame":
+                                Printer.PrintSlow("→ A burst of flame scorches your foes!\n");
+                                break;
+                            // add additional cases here
+                            default:
+                                Printer.PrintSlow("→ The magic book trembles, but nothing happens...\n");
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Printer.PrintSlow("Not enough Mana to cast that spell.\n");
+                    }
+
+                    // put Grimwore back in inventory so it doesn't disappear
                     player.Inventory.Add(ItemCatalog.Grimwore);
-
-                Printer.PrintSlow("Unlocked Spells:\n");
-                foreach (var spell in player.UnlockedSpells)
-                {
-                    Printer.PrintSlow($"- {spell}\n");
+                    Thread.Sleep(500);
                 }
+                // Backspace just exits into regular inventory
             }
         );
+
 
         public static readonly List<Item> All = new List<Item>
         {
