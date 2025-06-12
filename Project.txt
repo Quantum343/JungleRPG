@@ -1,7 +1,7 @@
 Inventory(Sam) 100% - done
 Fighting(Asad, Sam) 70% - base done
-Save and Load(Johan, Asad) 0% - done at end
-Music/Aesthetics(Sam, Johan) 0% - done at near end
+Save and Load(Sam, Asad) 0% - done at end
+Music/Aesthetics(sam, Johan) 0% - done at near end
 story(Sam, Asad, and Johan) 20% done start
  
 
@@ -47,5 +47,5 @@ Why This Project Should Be Approved:
 
 
 git add .
-git commit -m "6/6/2025 10:07AM"
+git commit -m "6/12/2025 10:08AM"
 git push origin main

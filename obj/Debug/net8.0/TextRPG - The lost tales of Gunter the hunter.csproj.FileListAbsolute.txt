@@ -13,3 +13,11 @@ C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\obj\Debug\net
 C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\obj\Debug\net8.0\TextRPG - The lost tales of Gunter the hunter.pdb
 C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\obj\Debug\net8.0\TextRPG - The lost tales of Gunter the hunter.genruntimeconfig.cache
 C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\obj\Debug\net8.0\ref\TextRPG - The lost tales of Gunter the hunter.dll
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\obj\Debug\net8.0\TextRPG - The lost tales of Gunter the hunter.csproj.AssemblyReference.cache
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\bin\Debug\net8.0\NAudio.dll
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\bin\Debug\net8.0\NAudio.Asio.dll
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\bin\Debug\net8.0\NAudio.Core.dll
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\bin\Debug\net8.0\NAudio.Midi.dll
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\bin\Debug\net8.0\NAudio.Wasapi.dll
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\bin\Debug\net8.0\NAudio.WinMM.dll
+C:\Users\s.anwar3\C#\TextRPG - The lost tales of Gunter the hunter\obj\Debug\net8.0\TextRPG .2033F273.Up2Date

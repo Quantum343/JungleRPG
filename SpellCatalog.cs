@@ -37,7 +37,7 @@ namespace JungleSurvivalRPG
             new Spell(
                 0,
                 "Healing",
-                "Restores a moderate amount of HP to the caster.",
+                "Restores up to 30 HP, not exceeding max.",
                 10,
                 0,
                 player =>
@@ -47,14 +47,16 @@ namespace JungleSurvivalRPG
                         Printer.PrintSlow($"{player.Name} is already at full health!\n");
                         return;
                     }
-                    player.Heal(30f);
+                    float healAmount = Math.Min(30f, player.MaxHP - player.HP);
+                    player.HP += healAmount;
+                    Printer.PrintSlow($"{player.Name} glows with life! (+{healAmount} HP)\n");
                 }
             ),
 
             new Spell(
                 1,
                 "Flame",
-                "Conjures a burst of flame to cook raw fish.",
+                "Conjures a flame to cook one raw fish in inventory.",
                 12,
                 0,
                 player =>
@@ -66,7 +68,7 @@ namespace JungleSurvivalRPG
                         if (item.Name == ItemCatalog.Fish.Name)
                         {
                             player.Inventory[i] = ItemCatalog.CookedFish;
-                            Printer.PrintSlow($"{player.Name} cooks a fish into a cooked meal!\n");
+                            Printer.PrintSlow($"{player.Name} cooks fish into a cooked meal!\n");
                             return;
                         }
                     }
@@ -83,8 +85,8 @@ namespace JungleSurvivalRPG
                 player =>
                 {
                     Printer.PrintSlow($"{player.Name} draws energy from the void...\n");
-                    var items = ItemCatalog.KnownItems.ToList();
-                    if (items.Count == 0)
+                    var items = ItemCatalog.KnownItems.Distinct().ToList();
+                    if (!items.Any())
                     {
                         Printer.PrintSlow("No known items to manifest.\n");
                         return;
@@ -93,7 +95,7 @@ namespace JungleSurvivalRPG
                     for (int i = 0; i < items.Count; i++)
                         Printer.PrintSlow($"{i + 1}: {items[i].Name}\n");
 
-                    Printer.PrintSlow($"Choose (1-{items.Count}): ");
+                    Printer.PrintSlow($"Choose 1-{items.Count}: ");
                     if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > items.Count)
                     {
                         Printer.PrintSlow("Invalid selection.\n");
@@ -115,14 +117,15 @@ namespace JungleSurvivalRPG
             new Spell(
                 3,
                 "Sin of Gluttony",
-                "Boost Strength by 2 and heal 5 HP.",
+                "Boost Strength by 2 and heal up to 5 HP.",
                 180,
                 100,
                 player =>
                 {
                     player.Strength += 2;
-                    player.Heal(5f);
-                    Printer.PrintSlow($"{player.Name} gains +2 STR and +5 HP.\n");
+                    float heal = Math.Min(5f, player.MaxHP - player.HP);
+                    player.HP += heal;
+                    Printer.PrintSlow($"{player.Name} gains +2 STR and +{heal} HP.\n");
                 }
             ),
 
@@ -136,33 +139,59 @@ namespace JungleSurvivalRPG
                 {
                     player.Luck += 2;
                     Printer.PrintSlow($"{player.Name} feels greed: +2 Luck (temporary)!\n");
+                    // TODO: schedule a revert of Luck
                 }
             ),
 
             new Spell(
                 5,
                 "Sin of Sloth",
-                "Regenerate extra Mana for next turns.",
-                140,
-                50,
+                "Increase mana capacity.",
+                10,
+                0,
                 player =>
                 {
-                    Printer.PrintSlow($"{player.Name} enters a meditative sloth...\n");
-                    // TODO: flag for increased regen
+                    Printer.PrintSlow($"{player.Name} enters a meditative state...\n");
+                    for (int i = 0; i < 20; i++)
+                    {
+                        //make backspace cancel
+                        if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Backspace)
+                        {
+                            Printer.PrintSlow($"{player.Name} cancels meditation.\n");
+                            return;
+
+                        }
+                        else{
+                             if (player.Mana < player.MaxMana)
+                            {
+                                player.IncreaseMaxMana(1f);
+                                Printer.PrintSlow($"{player.Name} gains +1 Mana.\n");
+                                Thread.Sleep(500); // Simulate meditation time
+                            }
+                            else if (player.Mana >= player.MaxMana)
+                            {
+                                Printer.PrintSlow($"{player.Name} is already at max Mana!\n");
+                                break;
+                            }
+                        }
+
+                    }
                 }
             ),
 
             new Spell(
                 6,
                 "Mana Meditation",
-                "Heal 2 HP to restore 5 Mana.",
+                "Trade 2 HP for up to 5 Mana.",
                 180,
                 100,
                 player =>
                 {
-                    player.HP = Math.Max(0f, player.HP - 2f);
-                    player.RestoreMana(5f);
-                    Printer.PrintSlow($"{player.Name} trades 2 HP for 5 Mana.\n");
+                    float loss = Math.Min(2f, player.HP);
+                    player.HP -= loss;
+                    float gain = Math.Min(5f, player.MaxMana - player.Mana);
+                    player.Mana += gain;
+                    Printer.PrintSlow($"{player.Name} trades {loss} HP for {gain} Mana.\n");
                 }
             ),
 
@@ -187,8 +216,8 @@ namespace JungleSurvivalRPG
                 200,
                 player =>
                 {
-                    player.HasRevival = true; // assume you've added this flag
                     Printer.PrintSlow($"{player.Name} binds a second chance!\n");
+                    // TODO: add death-intercept logic in Player
                 }
             ),
         };

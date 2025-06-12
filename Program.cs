@@ -3,21 +3,46 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using JungleSurvivalRPG;  // for Item, ItemCatalog 
+using NAudio.Wave;
 
 namespace JungleSurvivalRPG
 {
+    public static class AudioPlayer
+{
+    private static IWavePlayer? waveOut;
+    private static AudioFileReader? audioFile;
+
+    public static void PlayMusic(string path)
+    {
+        waveOut = new WaveOutEvent();
+        audioFile = new AudioFileReader(path);
+        waveOut.Init(audioFile);
+        waveOut.Play();
+    }
+
+    public static void StopMusic()
+    {
+        waveOut?.Stop();
+        waveOut?.Dispose();
+        audioFile?.Dispose();
+    }
+}
+
+
     public class Armor
     {
         public int Defence { get; set; }
         public int Strength { get; set; }
         public int Speed { get; set; }
         public int Luck { get; set; }
-        public Armor(int defence, int strength, int speed, int luck)
+        public string Description{ get; set; }
+        public Armor(int defence, int strength, int speed, int luck, string Description )
         {
             Defence = defence;
             Strength = strength;
             Speed = speed;
             Luck = luck;
+            this.Description = Description;
         }
     }
 
@@ -59,18 +84,28 @@ namespace JungleSurvivalRPG
         public static Armor NoArmor = new Armor(0, 0, 0, 0); // No armor equipped
         public static Weapon NoWeapon = new Weapon(0, "", 0, "", 0, 0, "No weapon equipped", 0); // No weapon equipped
 
-        public static Armor BarkhideVest = new Armor(8, 2, -1, 1);            // Balanced LVL5
+        public static Armor BarkhideVest = new Armor(8, 2, 1, 1);            // Balanced LVL5
         public static Armor WornScoutJacket = new Armor(6, 1, 0, 2);          // Nimble, higher luck/speed LVL20
-        public static Armor IronScaleMail = new Armor(20, 5, -5, 2);          // Heavy defense
-        public static Armor RogueTunic = new Armor(14, 3, -1, 6);             // Agile, higher luck/speed
+        public static Armor IronScaleMail = new Armor(20, 5, 4, 2);          // Heavy defense
+        public static Armor RogueTunic = new Armor(14, 3, 7, 6);             // Agile, higher luck/speed
         public static Armor PhantomCoat = new Armor(35, 15, 5, 4);            // Stealth-focused, decent all-around LVL35
-        public static Armor BattleForgedPlates = new Armor(40, 9, 2, 2);      // Tankier variant
-        public static Armor DrakeskinPlate = new Armor(55, 15, 0, 6);         // Sturdy, magical resistance implied LVL60
-        public static Armor ValkyrieShroud = new Armor(48, 11, 7, 10);        // Luck and speed boosted
-        public static Armor RadiantPlate = new Armor(70, 18, 0, 10);          // Light-infused, aura-based defense LV90
+        public static Armor BattleForgedPlates = new Armor(40, 9, 7, 2);      // Tankier variant
+        public static Armor DrakeskinPlate = new Armor(55, 15, 5, 6);         // Sturdy, magical resistance implied LVL60
+        public static Armor ValkyrieShroud = new Armor(48, 11, 12, 10);        // Luck and speed boosted
+        public static Armor RadiantPlate = new Armor(70, 18,7, 10);          // Light-infused, aura-based defense LV90
         public static Armor ShadowRaiment = new Armor(60, 22, 14, 8);         // Shadow-enhanced, offensive agility
 
+        
+
         public static Weapon RustyDagger = new Weapon(0, "", 0, "", 1, 3, "Rusty dagger", 5);
+        public static Weapon EmberFang = new Weapon(65, "Flame Bite", 25, "Spark Snap", -1, 4, "A basic iron sword enchanted with weak fire magic.", 15);
+        public static Weapon StormSplitter = new Weapon(85, "Thunder Slash", 45, "Static Arc", -5, 10, "A steel longsword that crackles with electrical energy.", 20);
+        public static Weapon NightReaver = new Weapon(120, "Void Rend", 65, "Shadow Slice", -2, 16, "Forged in darkness, this blade weakens enemies' vision.", 25);
+        public static Weapon DragonspineExecutioner = new Weapon(150, "Infernal Decapitation", 85, "Ember Swipe", -7, 28, "A massive greatsword made from dragon bones. Delivers heavy fire-based damage.", 35);
+        public static Weapon MirrorEdge = new Weapon(160, "Radiant Slash", 100, "Glint Pierce", -12, 22, "A crystal blade that reflects some light-based magic back at the attacker.", 30);
+        public static Weapon Bloodthirster = new Weapon(160, "Life Leech", 95, "Crimson Swipe", -3, 30, "A cursed weapon that steals a bit of the target's vitality with each strike.", 33);
+        public static Weapon ChronoFang = new Weapon(175, "Time Rend", 80, "Clock Pierce", -3, 24, "An arcane blade said to distort time. Occasionally delays an enemy’s next move.", 28);
+        public static Weapon VoidwalkerBlade = new Weapon(1000, "Hakai", 0, "Slipstream Cut", 15, 15, "A blade infused with void energy. Allows the wielder to strike from a short distance instantly.", 40);
     }
 
     public class Enemy
@@ -143,20 +178,66 @@ namespace JungleSurvivalRPG
         public int Speed { get; set; }
         public int Strength { get; set; }
         public float MaxHP => 100f; // Default max HP
-        public float MaxMana => 60f; // Default max Mana
-
+        private float _maxMana = 60f; // Backing field for MaxMana
+        public float MaxMana
+        {
+            get => _maxMana;
+            private set => _maxMana = value;
+        }
+        public int Experience { get; private set; } = 0;
+        public List<string> UnlockedSpells { get; } = new List<string>();
+        public void GainExperience(int amount)
+        {
+            Experience += amount;
+            UnlockAvailableSpells();
+        }
         public Weapon EquippedWeapon { get; set; } = Equipment.NoWeapon; // Default no weapon equipped
         public Armor EquippedArmor { get; set; } = Equipment.NoArmor;    // Default no armor equipped
 
         public List<Item> Inventory { get; } = new();
         public bool HasFoundPage2 { get; set; } = false;
 
-        // For Grimwore usage
-        public int Experience { get; set; } = 0;
-        public List<string> UnlockedSpells { get; } = new();
+        public void IncreaseMaxMana(float amount)
+        {
+            if (amount > 0)
+            {
+                MaxMana += amount;
+                Console.WriteLine($"Max Mana increased by {amount}. New Max Mana: {MaxMana}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid amount. Max Mana increase must be positive.");
+            }
+        }
+
+        public void DecreaseMaxMana(float amount)
+        {
+            if (amount > 0 && MaxMana - amount >= 0)
+            {
+                MaxMana -= amount;
+                Console.WriteLine($"Max Mana decreased by {amount}. New Max Mana: {MaxMana}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid amount. Max Mana decrease must be positive and not reduce below zero.");
+            }
+        }
+
 
         // To store list of known/previously found items
         private List<Item> knownItems = new List<Item>();
+            private void UnlockAvailableSpells()
+        {
+            foreach (var spell in SpellCatalog.AllSpells)
+            {
+                if (Experience >= spell.RequiredXP 
+                && !UnlockedSpells.Contains(spell.Name))
+                {
+                    UnlockedSpells.Add(spell.Name);
+                    Console.WriteLine($"\n*** New spell learned: {spell.Name}! ***\n");
+                }
+            }
+        }
 
         public Player(string name)
         {
@@ -201,35 +282,46 @@ namespace JungleSurvivalRPG
                 return;
             }
 
+            // Group items by name
+            var grouped = Inventory
+                .GroupBy(item => item.Name)
+                .Select(g => new { Name = g.Key, Count = g.Count(), Sample = g.First() })
+                .ToList();
+
             int idx = 0;
             ConsoleKey key;
+
             do
             {
                 Console.Clear();
                 Console.WriteLine("-- Inventory --");
-                for (int i = 0; i < Inventory.Count; i++)
+                for (int i = 0; i < grouped.Count; i++)
                 {
-                    Console.Write(i == idx ? "> " : "  ");
-                    Console.WriteLine(Inventory[i].Name);
+                    string prefix = (i == idx) ? "> " : "  ";
+                    Console.WriteLine($"{prefix}{grouped[i].Name} x{grouped[i].Count}");
                 }
-                Console.WriteLine("\n" + Inventory[idx].Description);
+
+                Console.WriteLine("\n" + grouped[idx].Sample.Description);
                 Console.WriteLine("Use ↑/↓ to navigate, Enter to use, Backspace to exit.");
 
                 key = Console.ReadKey(true).Key;
                 if (key == ConsoleKey.UpArrow)
-                    idx = (idx - 1 + Inventory.Count) % Inventory.Count;
+                    idx = (idx - 1 + grouped.Count) % grouped.Count;
                 else if (key == ConsoleKey.DownArrow)
-                    idx = (idx + 1) % Inventory.Count;
+                    idx = (idx + 1) % grouped.Count;
                 else if (key == ConsoleKey.Backspace)
-                    return; // Exit inventory without using an item
+                    return;
             }
             while (key != ConsoleKey.Enter);
 
+            var chosenName = grouped[idx].Name;
+            var chosenItem = Inventory.First(item => item.Name == chosenName);
+
             Console.Clear();
-            var chosen = Inventory[idx];
-            chosen.Use(this);
-            Inventory.RemoveAt(idx);
+            chosenItem.Use(this);
+            Inventory.Remove(chosenItem);
         }
+
     }
 
     public static class Printer
@@ -261,12 +353,46 @@ namespace JungleSurvivalRPG
 
     public class GameEngine
     {
+
+
         private Player player = null!;
         private Dictionary<SceneID, Scene> scenes = null!;
         private List<Enemy> enemies = new();
         private List<BossEnemy> boss = new();
         private SceneID current;
         private SceneID lastScene;
+
+        public static void DisplayArmors(Armor armor1, Armor armor2, string armorName1, string armorName2)
+        {
+            Console.WriteLine("┌─────────────────────────────┬─────────────────────────────┐");
+            Console.WriteLine($"│ {armorName1,-27} │ {armorName2,-27} │");
+            Console.WriteLine("├─────────────────────────────┼─────────────────────────────┤");
+            Console.WriteLine($"│ Defence: {armor1.Defence,-17} │ Defence: {armor2.Defence,-17} │");
+            Console.WriteLine($"│ Strength: {armor1.Strength,-16} │ Strength: {armor2.Strength,-16} │");
+            Console.WriteLine($"│ Speed: {armor1.Speed,-18} │ Speed: {armor2.Speed,-18} │");
+            Console.WriteLine($"│ Luck: {armor1.Luck,-19} │ Luck: {armor2.Luck,-19} │");
+            Console.WriteLine("├─────────────────────────────┼─────────────────────────────┤");
+            Console.WriteLine($"│ {armor1.Description,-27} │ {armor2.Description,-27} │");
+            Console.WriteLine("└─────────────────────────────┴─────────────────────────────┘");
+         }
+
+         public static void DisplayWeapons(Weapon weapon1, Weapon weapon2, string weaponName, string WeaponName2)
+        {
+            Console.WriteLine("┌──────────────────────────────┬──────────────────────────────┐");
+            Console.WriteLine($"│ {weaponName,-28} │ {weaponName2,-28} │");
+            Console.WriteLine("├──────────────────────────────┼──────────────────────────────┤");
+            Console.WriteLine($"│ Normal Atk: {weapon1.AttackNormal,-17} │ Normal Atk: {weapon2.AttackNormal,-17} │");
+            Console.WriteLine($"│ Normal Dmg: {weapon1.DmgNormal,-17} │ Normal Dmg: {weapon2.DmgNormal,-17} │");
+            Console.WriteLine($"│ Special Atk: {weapon1.AttackSpecial,-15} │ Special Atk: {weapon2.AttackSpecial,-15} │");
+            Console.WriteLine($"│ Special Dmg: {weapon1.DmgSpecial,-15} │ Special Dmg: {weapon2.DmgSpecial,-15} │");
+            Console.WriteLine($"│ Speed: {weapon1.Speed,-21} │ Speed: {weapon2.Speed,-21} │");
+            Console.WriteLine($"│ Strength: {weapon1.Strength,-18} │ Strength: {weapon2.Strength,-18} │");
+            Console.WriteLine("├──────────────────────────────┼──────────────────────────────┤");
+            Console.WriteLine($"│ {weapon1.Description,-28} │ {weapon2.Description,-28} │");
+            Console.WriteLine("└──────────────────────────────┴──────────────────────────────┘");
+        }
+
+
 
         public void Start()
         {
@@ -279,7 +405,34 @@ namespace JungleSurvivalRPG
             BuildScenes();
 
             current = new SceneID(1, 1);
+            Thread musicLoopThread = new Thread(() =>
+            {
+                try
+                {
+                    while (true)
+                    {
+                        using (var reader = new AudioFileReader("Music.mp3")) // Use WAV to avoid MP3 decoding issues
+                        using (var waveOut = new WaveOutEvent())
+                        {
+                            waveOut.Init(reader);
+                            waveOut.Play();
+
+                            while (waveOut.PlaybackState == PlaybackState.Playing)
+                            {
+                                Thread.Sleep(500);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Music Error] {ex.Message}");
+                }
+            });
+            musicLoopThread.IsBackground = true;
+            musicLoopThread.Start();
             Run();
+
         }
 
         private void InitializeEnemies()
@@ -300,6 +453,15 @@ namespace JungleSurvivalRPG
 
         private void BuildScenes()
         {
+
+
+
+            //gain experience
+            player.GainExperience(20); // Initialize experience to 0
+
+
+
+
             scenes = new Dictionary<SceneID, Scene>();
 
             // ── GAME-OVER ────────────────────────────────────────────────────────────
@@ -441,7 +603,10 @@ namespace JungleSurvivalRPG
                         else
                         {
                             Console.WriteLine($"You caught a fish! It’s a small one, but it will do.\n" +
-                                "You can use it to restore some health or as a crafting ingredient.\n");
+                                "You can use it to restore some health or as a crafting ingredient. +0.1XP \n");
+                                //use integer
+                            player.GainExperience(1); // Gain 1 experience point
+                                Console.WriteLine($"Experience: {player.Experience}");
                             player.Inventory.Add(ItemCatalog.Fish);
                         }
                         Console.WriteLine("You see no fish");
@@ -501,16 +666,155 @@ namespace JungleSurvivalRPG
                     player.Inventory.Add(ItemCatalog.LootBox);
                 }
             );
+            //Find crafting table at storage
+            scenes[new SceneID(2, 2)] = new Scene(
+                "You explore the tree house\n" +
+                "1) Storage room \n" +
+                "2) Open Inventory.\n" +
+                "3) Return to the clearing.\n"
+            );
+            scenes[new SceneID(2, 2)].Choices[1] = new SceneID(10, 1); // Storage room with crafting table
+            scenes[new SceneID(2, 2)].Choices[2] = new SceneID(0, 0); // Open Inventory
+            scenes[new SceneID(2, 2)].Choices[3] = new SceneID(2, 1); // Return to clearing
 
             // Crafting table found at the treehouse
             scenes[new SceneID(10, 1)].Text +=
-                "You find a Crafting Table here.....\n" +
+                "You check out the storage.....\n" +
                 "1) Use the Crafting Table.\n" +
                 "2) Return to the clearing.\n" +
                 "3) Open Inventory.\n";
+                player =>
+                {
+                    //add 4 bark
+                    for (int i = 0; i < 4; i++){
+                        player.Inventory.Add(ItemCatalog.Bark);
+                    }
+                };
             scenes[new SceneID(10, 1)].Choices[0] = new SceneID(10, 2); // Crafting table scene
             scenes[new SceneID(10, 1)].Choices[1] = new SceneID(2, 1); // Return to clearing
+            scenes[new SceneID(10, 1)].Choices[2] = new SceneID(0, 0); // Open Inventory
+            
+
+            // ── CRAFTING TABLE ──────────────────────────────────────────────────────
+            scenes[new SceneID(10, 2)] = new Scene(
+                "You approach the Crafting Table...\n",
+                player =>
+                {
+                    //Write Options, armor, weapons, exit
+                    Console.WriteLine(
+                        "1) Craft Armor\n" +
+                        "2) Craft Weapon\n" +
+                        "3) Exit Crafting Table\n" +
+                        "4) Open Inventory\n"
+                    );
+                    //Check chosen option
+                    int choice;
+                    do
+                    {
+                        Console.Write("Choose an option: ");
+                        string? input = Console.ReadLine();
+                        if (int.TryParse(input, out choice) && choice >= 1 && choice <= 4)
+                        {
+                            break;
+                        }
+                        Console.WriteLine("Invalid choice. Please try again.");
+                    } while (true);
+
+                    switch (choice)
+                    {
+                        case 1:
+                            CraftArmor(player);
+                            break;
+                        case 2:
+                            CraftWeapon(player);
+                            break;
+                        case 3:
+                            Console.WriteLine("Exiting Crafting Table.");
+                            break;
+                        case 4:
+                            player.OpenInventory();
+                            break;
+                    }
+                    
+                }
+            );
         }
+            //First option (craft armor)
+            private void CraftArmor(Player player)
+            {
+                Console.WriteLine(
+                    "Choose an armor to craft:\n" +
+                    "1) Barkhide Vest (requires 2x fish, 3x leather, and 4x Bark)\n" +
+                    "2) Worn Scout Jacket (requires 3x leather, 1x fish, and 2x chainmail)\n" +
+                    "3) Iron Scale Mail (requires 5x Iron Ore)\n"
+                );
+                int armorChoice;
+                do
+                {
+                    Console.Write("Choose an armor to craft (1-3): ");
+                    string? input = Console.ReadLine();
+                    if (int.TryParse(input, out armorChoice) && armorChoice >= 1 && armorChoice <= 3)
+                    {
+                        break;
+                    }
+                    Console.WriteLine("Invalid choice. Please try again.");
+                } while (true);
+                switch (armorChoice)
+                {
+                    case 1:
+                    //craft Barkhide Vest
+                        if (player.Inventory.Count(item => item.Name == "Bark") >= 4 &&
+                            player.Inventory.Count(item => item.Name == "Fish") >= 2 &&
+                            player.Inventory.Count(item => item.Name == "Leather") >= 3)
+                        { // for each to remvoe specific item count
+                            for (int i = 0; i < 4; i++)
+                            {
+                                player.Inventory.RemoveAll(item => item.Name == "Bark");
+                            }
+                            for (int i = 0; i < 2; i++)
+                            {
+                                player.Inventory.RemoveAll(item => item.Name == "Fish");
+                            }
+                            for (int i = 0; i < 3; i++)
+                            {
+                                player.Inventory.RemoveAll(item => item.Name == "Leather");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("You need 4x Bark, 2x Fish, and 3x Leather to craft this armor.");
+                        }
+                        break;
+                    case 2:
+                        if (player.Inventory.Count(item => item.Name == "Worn Cloth") >= 3)
+                        {
+                            player.Inventory.RemoveAll(item => item.Name == "Worn Cloth");
+                            player.EquippedArmor = Equipment.WornScoutJacket;
+                            Console.WriteLine("You crafted a Worn Scout Jacket!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("You need 3x Worn Cloth to craft this armor.");
+                        }
+                        break;
+                    case 3:
+                        if (player.Inventory.Count(item => item.Name == "Iron Ore") >= 5)
+                        {
+                            player.Inventory.RemoveAll(item => item.Name == "Iron Ore");
+                            player.EquippedArmor = Equipment.IronScaleMail;
+                            Console.WriteLine("You crafted an Iron Scale Mail!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("You need 5x Iron Ore to craft this armor.");
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        break;
+                }
+            }
+            
 
         private void Run()
         {
@@ -577,8 +881,11 @@ namespace JungleSurvivalRPG
                     if (player.Mana > player.MaxMana)
                     {
                         player.Mana = player.MaxMana;
+                        Console.WriteLine($"Your Mana has been fully restored\n");
                     }
                 }
+                
+
 
             }
         }
