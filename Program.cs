@@ -821,7 +821,8 @@ namespace JungleSurvivalRPG
                     "Choose an armor to craft:\n" +
                     "1) Barkhide Vest (requires 2x fish, 3x leather, and 4x Bark)\n" +
                     "2) Worn Scout Jacket (requires 3x leather, 1x fish, and 2x chainmail)\n" +
-                    "3) Iron Scale Mail (requires 5x Iron Ore)\n"
+                    "3) Iron Scale Mail (requires 5x Iron Ore)\n" +
+                    "4) Exit Crafting Table\n"
                 );
                 int armorChoice;
                 do
@@ -883,6 +884,9 @@ namespace JungleSurvivalRPG
                         {
                             Console.WriteLine("You need 5x Iron Ore to craft this armor.");
                         }
+                        break;
+                    case 4:
+                        Console.WriteLine("Exiting Crafting Table.");
                         break;
                     default:
                         Console.WriteLine("Invalid choice.");
