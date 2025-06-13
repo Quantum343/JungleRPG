@@ -454,6 +454,7 @@ namespace JungleSurvivalRPG
 
             //gain experience
             player.GainExperience(20); // Initialize experience to 0
+            bool storageLooted = false; // Track if storage has been looted
 
 
 
@@ -675,46 +676,45 @@ namespace JungleSurvivalRPG
 
             // Crafting table found at the treehouse
             scenes[new SceneID(10, 1)] = new Scene(
+                "You find 4 barks in the storage room.\n" +
                 "You check out the storage.....\n" +
                 "1) Use the Crafting Table.\n" +
                 "2) Return to the clearing.\n" +
-                "0) Open Inventory.\n",
+                "3) Open Inventory.\n" +
+                "0) Go back.\n",
                 player =>
                 {
                     for (int i = 0; i < 4 ; i++)
                     {
 
                     player.Inventory.Add(ItemCatalog.Bark);
+                    bool storageLooted = true;
 
                     }
                 });
-            scenes[new SceneID(10, 1)].Choices[0] = new SceneID(10, 2); // Crafting table scene
-            scenes[new SceneID(10, 1)].Choices[1] = new SceneID(2, 1); // Return to clearing
-            scenes[new SceneID(10, 1)].Choices[2] = new SceneID(0, 0); // Open Inventory
+            scenes[new SceneID(10, 1)].Choices[1] = new SceneID(10, 2); // Crafting table scene
+            scenes[new SceneID(10, 1)].Choices[2] = new SceneID(2, 1); // Return to clearing
+            scenes[new SceneID(10, 1)].Choices[3] = new SceneID(0, 0); // Open Inventory
             
 
             // ── CRAFTING TABLE ──────────────────────────────────────────────────────
-            scenes[new SceneID(10, 2)] = new Scene(
+            var craftScene = new Scene(
                 "You approach the Crafting Table...\n",
                 player =>
                 {
-                    //Write Options, armor, weapons, exit
                     Console.WriteLine(
                         "1) Craft Armor\n" +
                         "2) Craft Weapon\n" +
                         "3) Exit Crafting Table\n" +
                         "4) Open Inventory\n"
                     );
-                    //Check chosen option
                     int choice;
                     do
                     {
                         Console.Write("Choose an option: ");
                         string? input = Console.ReadLine();
                         if (int.TryParse(input, out choice) && choice >= 1 && choice <= 4)
-                        {
                             break;
-                        }
                         Console.WriteLine("Invalid choice. Please try again.");
                     } while (true);
 
@@ -733,16 +733,25 @@ namespace JungleSurvivalRPG
                             player.OpenInventory();
                             break;
                     }
-                    
                 }
             );
+            scenes[new SceneID(10, 2)] = craftScene;
+
+            // now wire every choice back to the storage‐room scene (10,1),
+            // except inventory which still uses the built‐in inventory branch:
+            craftScene.Choices[1] = new SceneID(10, 1); // after trying to craft Armor
+            craftScene.Choices[2] = new SceneID(10, 1); // after trying to craft Weapon
+            craftScene.Choices[3] = new SceneID(10, 1); // explicit “Exit”
+            craftScene.Choices[4] = new SceneID(0, 0);  // Open Inventory
         }
             private void CraftWeapon(Player player){
                 Console.WriteLine(
                     "Choose a weapon to craft:\n" +
                     "1) Rusty Dagger (requires 2x Iron Ore)\n" +
                     "2) Ember Fang (requires 3x Iron Ore, 1x Fish)\n" +
-                    "3) Storm Splitter (requires 5x Iron Ore)\n"
+                    "3) Storm Splitter (requires 5x Iron Ore)\n" +
+                    "4) Exit Crafting Table\n" +
+
                 );
                 int weaponChoice;
                 do
@@ -767,8 +776,9 @@ namespace JungleSurvivalRPG
                         else
                         {
                             Console.WriteLine("You need 2x Iron Ore to craft this weapon.");
-                        }
+                        }// go back to scene 10, 2
                         break;
+
                     case 2:
                         if (player.Inventory.Count(item => item.Name == "Iron Ore") >= 3 &&
                             player.Inventory.Count(item => item.Name == "Fish") >= 1)
@@ -794,6 +804,10 @@ namespace JungleSurvivalRPG
                         {
                             Console.WriteLine("You need 5x Iron Ore to craft this weapon.");
                         }
+                        break;
+
+                    case 4:
+                        Console.WriteLine("Exiting Crafting Table.");
                         break;
                     default:
                         Console.WriteLine("Invalid choice.");
@@ -1101,7 +1115,6 @@ namespace JungleSurvivalRPG
 
                 case "4":
                     Console.WriteLine("You fled back to the previous scene.\n");
-                    Environment.Exit(0);
                     return totalDamage;
 
                 default:

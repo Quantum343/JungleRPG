@@ -7,7 +7,7 @@ story(Sam, Asad, and Johan) 20% done start
 
 
 
-Project Proposal: Jungle Survival RPG (Text-Based) shit....
+Project Proposal: Jungle Survival RPG (Text-Based)
 
 Purpose:
 My project is a text-based survival RPG where the player is stranded in a jungle and must survive by making decisions, exploring an ASCII map, and managing resources. Inspired by roguelike mechanics, the game includes combat, random events (e.g., wildlife, weather), and crafting. The purpose is to develop an interactive, algorithm-heavy simulation that challenges OUR programming and design skills.
@@ -20,6 +20,9 @@ CTS Modules:
    - Encapsulation, abstraction, and polymorphism will be used for modular, extensible code.
 2. CSE3110 - Iterative Algorithms 1
    - Movement logic, maybe turn based event handling, combat, and random terain generation use iterative loops and decision steuctures.
+3: save and Load
+
+4: added music(new concept)
 
 Computational Thinking Elements:
 - Algorithms: Combat resolution, event generation, map updates
@@ -42,9 +45,11 @@ Why This Project Should Be Approved:
 
 
 
+ 
+
 
 
 
 git add .
-git commit -m "6/12/2025 10:08AM"
+git commit -m "6/13/2025"
 git push origin main
