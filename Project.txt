@@ -39,7 +39,6 @@ Why This Project Should Be Approved:
 - It demonstrates advanced programming principles and computational thinking in a creative format.
 - It’s more educational because this grows multiple abilities like design, logic, and organzation.
 - The project allows for deep personal engagement and wanting to something big.
-- Intention to implement multiplayer 
 
 
 

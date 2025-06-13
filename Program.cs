@@ -36,13 +36,12 @@ namespace JungleSurvivalRPG
         public int Speed { get; set; }
         public int Luck { get; set; }
         public string Description{ get; set; }
-        public Armor(int defence, int strength, int speed, int luck, string Description )
+        public Armor(int defence, int strength, int speed, int luck)
         {
             Defence = defence;
             Strength = strength;
             Speed = speed;
             Luck = luck;
-            this.Description = Description;
         }
     }
 
@@ -54,8 +53,8 @@ namespace JungleSurvivalRPG
         public string LightManaAttackName { get; set; }
         public int Speed { get; set; }
         public int Strength { get; set; }
-        public string Description { get; set; }
         public int RegularAttack { get; set; } // New property
+        public string Description{ get; set; }
 
         public Weapon(
             int heavyManaAttack,
@@ -64,7 +63,7 @@ namespace JungleSurvivalRPG
             string lightManaAttackName,
             int speed,
             int strength,
-            string description,
+            string Description,
             int regularAttack
         )
         {
@@ -74,7 +73,7 @@ namespace JungleSurvivalRPG
             LightManaAttackName = lightManaAttackName;
             Speed = speed;
             Strength = strength;
-            Description = description;
+            this.Description = Description;
             RegularAttack = regularAttack;
         }
     }
@@ -371,26 +370,23 @@ namespace JungleSurvivalRPG
             Console.WriteLine($"│ Strength: {armor1.Strength,-16} │ Strength: {armor2.Strength,-16} │");
             Console.WriteLine($"│ Speed: {armor1.Speed,-18} │ Speed: {armor2.Speed,-18} │");
             Console.WriteLine($"│ Luck: {armor1.Luck,-19} │ Luck: {armor2.Luck,-19} │");
-            Console.WriteLine("├─────────────────────────────┼─────────────────────────────┤");
-            Console.WriteLine($"│ {armor1.Description,-27} │ {armor2.Description,-27} │");
             Console.WriteLine("└─────────────────────────────┴─────────────────────────────┘");
          }
 
-         public static void DisplayWeapons(Weapon weapon1, Weapon weapon2, string weaponName, string WeaponName2)
+        public static void DisplayWeapons(Weapon w1, Weapon w2, string name1, string name2)
         {
-            Console.WriteLine("┌──────────────────────────────┬──────────────────────────────┐");
-            Console.WriteLine($"│ {weaponName,-28} │ {weaponName2,-28} │");
-            Console.WriteLine("├──────────────────────────────┼──────────────────────────────┤");
-            Console.WriteLine($"│ Normal Atk: {weapon1.AttackNormal,-17} │ Normal Atk: {weapon2.AttackNormal,-17} │");
-            Console.WriteLine($"│ Normal Dmg: {weapon1.DmgNormal,-17} │ Normal Dmg: {weapon2.DmgNormal,-17} │");
-            Console.WriteLine($"│ Special Atk: {weapon1.AttackSpecial,-15} │ Special Atk: {weapon2.AttackSpecial,-15} │");
-            Console.WriteLine($"│ Special Dmg: {weapon1.DmgSpecial,-15} │ Special Dmg: {weapon2.DmgSpecial,-15} │");
-            Console.WriteLine($"│ Speed: {weapon1.Speed,-21} │ Speed: {weapon2.Speed,-21} │");
-            Console.WriteLine($"│ Strength: {weapon1.Strength,-18} │ Strength: {weapon2.Strength,-18} │");
-            Console.WriteLine("├──────────────────────────────┼──────────────────────────────┤");
-            Console.WriteLine($"│ {weapon1.Description,-28} │ {weapon2.Description,-28} │");
-            Console.WriteLine("└──────────────────────────────┴──────────────────────────────┘");
+            Console.WriteLine("┌────────────────────────────────────────────────────────────┐");
+            Console.WriteLine($"│ {name1,-28} │ {name2,-28} │");
+            Console.WriteLine("├────────────────────────────────────────────────────────────┤");
+            Console.WriteLine($"│ Normal Attack: {w1.RegularAttack,-10} │ Normal Attack: {w2.RegularAttack,-10} │");
+            Console.WriteLine($"│ Light Mana: {w1.LightManaAttackName} ({w1.LightManaAttack})   │ Light Mana: {w2.LightManaAttackName} ({w2.LightManaAttack})   │");
+            Console.WriteLine($"│ Heavy Mana: {w1.HeavyManaAttackName} ({w1.HeavyManaAttack})   │ Heavy Mana: {w2.HeavyManaAttackName} ({w2.HeavyManaAttack})   │");
+            Console.WriteLine($"│ Speed:         {w1.Speed,-10} │ Speed:         {w2.Speed,-10} │");
+            Console.WriteLine($"│ Strength:      {w1.Strength,-10} │ Strength:      {w2.Strength,-10} │");
+            Console.WriteLine($"│ {w1.Description,-28} │ {w2.Description,-28} │");
+            Console.WriteLine("└────────────────────────────────────────────────────────────┘");
         }
+
 
 
 
@@ -678,18 +674,20 @@ namespace JungleSurvivalRPG
             scenes[new SceneID(2, 2)].Choices[3] = new SceneID(2, 1); // Return to clearing
 
             // Crafting table found at the treehouse
-            scenes[new SceneID(10, 1)].Text +=
+            scenes[new SceneID(10, 1)] = new Scene(
                 "You check out the storage.....\n" +
                 "1) Use the Crafting Table.\n" +
                 "2) Return to the clearing.\n" +
-                "3) Open Inventory.\n";
+                "0) Open Inventory.\n",
                 player =>
                 {
-                    //add 4 bark
-                    for (int i = 0; i < 4; i++){
-                        player.Inventory.Add(ItemCatalog.Bark);
+                    for (int i = 0; i < 4 ; i++)
+                    {
+
+                    player.Inventory.Add(ItemCatalog.Bark);
+
                     }
-                };
+                });
             scenes[new SceneID(10, 1)].Choices[0] = new SceneID(10, 2); // Crafting table scene
             scenes[new SceneID(10, 1)].Choices[1] = new SceneID(2, 1); // Return to clearing
             scenes[new SceneID(10, 1)].Choices[2] = new SceneID(0, 0); // Open Inventory
@@ -739,6 +737,69 @@ namespace JungleSurvivalRPG
                 }
             );
         }
+            private void CraftWeapon(Player player){
+                Console.WriteLine(
+                    "Choose a weapon to craft:\n" +
+                    "1) Rusty Dagger (requires 2x Iron Ore)\n" +
+                    "2) Ember Fang (requires 3x Iron Ore, 1x Fish)\n" +
+                    "3) Storm Splitter (requires 5x Iron Ore)\n"
+                );
+                int weaponChoice;
+                do
+                {
+                    Console.Write("Choose a weapon to craft (1-3): ");
+                    string? input = Console.ReadLine();
+                    if (int.TryParse(input, out weaponChoice) && weaponChoice >= 1 && weaponChoice <= 3)
+                    {
+                        break;
+                    }
+                    Console.WriteLine("Invalid choice. Please try again.");
+                } while (true);
+                switch (weaponChoice)
+                {
+                    case 1:
+                        if (player.Inventory.Count(item => item.Name == "Iron Ore") >= 2)
+                        {
+                            player.Inventory.RemoveAll(item => item.Name == "Iron Ore");
+                            player.EquippedWeapon = Equipment.RustyDagger;
+                            Console.WriteLine("You crafted a Rusty Dagger!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("You need 2x Iron Ore to craft this weapon.");
+                        }
+                        break;
+                    case 2:
+                        if (player.Inventory.Count(item => item.Name == "Iron Ore") >= 3 &&
+                            player.Inventory.Count(item => item.Name == "Fish") >= 1)
+                        {
+                            player.Inventory.RemoveAll(item => item.Name == "Iron Ore");
+                            player.Inventory.RemoveAll(item => item.Name == "Fish");
+                            player.EquippedWeapon = Equipment.EmberFang;
+                            Console.WriteLine("You crafted an Ember Fang!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("You need 3x Iron Ore and 1x Fish to craft this weapon.");
+                        }
+                        break;
+                    case 3:
+                        if (player.Inventory.Count(item => item.Name == "Iron Ore") >= 5)
+                        {
+                            player.Inventory.RemoveAll(item => item.Name == "Iron Ore");
+                            player.EquippedWeapon = Equipment.StormSplitter;
+                            Console.WriteLine("You crafted a Storm Splitter!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("You need 5x Iron Ore to craft this weapon.");
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        break;
+                }
+            }
             //First option (craft armor)
             private void CraftArmor(Player player)
             {
