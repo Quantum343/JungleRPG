@@ -750,7 +750,7 @@ namespace JungleSurvivalRPG
                     "1) Rusty Dagger (requires 2x Iron Ore)\n" +
                     "2) Ember Fang (requires 3x Iron Ore, 1x Fish)\n" +
                     "3) Storm Splitter (requires 5x Iron Ore)\n" +
-                    "4) Exit Crafting Table\n" +
+                    "4) Exit Crafting Table\n"
 
                 );
                 int weaponChoice;
