@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TextRPG - The lost tales of Gunter the hunter")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+53d127409ec715759ffbb6b7433c52e3d68d4480")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6bfe6e1524966bd7f200665b8766c9faf8311212")]
 [assembly: System.Reflection.AssemblyProductAttribute("TextRPG - The lost tales of Gunter the hunter")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TextRPG - The lost tales of Gunter the hunter")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

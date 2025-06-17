@@ -113,6 +113,695 @@ Optional epilogue depending on collected items, decisions, or surviving companio
 
 
 
-https://cdn.pixabay.com/download/audio/2024/11/30/audio_5c0c2a06af.mp3?filename=medieval-opener-270568.mp3
+
+
+
+Four lanterns shine in hues so bold,
+One burns hot, the others cold.
+Touch the safe one, lest you fry —
+Clues are hidden in what they imply:
+
+The red lantern lies.
+
+The blue says: "Green is not safe."
+
+The green says: "I am safe."
+
+The yellow says: "Red lies."
+
+Which lantern is safe to touch?
+
+Answer: Green
+Logic: Only one lantern can be telling the truth. If Green is safe, its statement is true, and the others' statements are false — which works.
+
+🔹 2. Trial of the Twin Seers
+Setting: Two ancient statues — one always lies, one always tells the truth.
+
+Riddle:
+
+You may ask one question to one statue.
+You must choose the correct door — one leads to treasure, the other to doom.
+
+What question should you ask to guarantee safety?
+
+Answer:
+
+“If I were to ask the other statue which door leads to treasure, which one would they point to?”
+Then go through the opposite door.
+
+Logic: This classic riddle uses double negation to always reveal the wrong door — going opposite guarantees success.
+
+🔹 3. The Clockmaker’s Curse
+Setting: A broken sundial where the shadow points between numbers — you must tell time to proceed.
+
+Riddle:
+
+I have no hands, but numbers I bear,
+I mark the time with shadows' care.
+At noon I face the sky with pride,
+At dusk I wear my darkened hide.
+But here’s a twist — the time you seek:
+
+If twice my hour is less than thrice the hour three hours from now,
+What time is it?
+
+Answer: 3 o'clock
+Logic:
+Let x = current hour.
+Then:
+2x < 3(x + 3)
+→ 2x < 3x + 9
+→ -x < 9 → x > -9 (always true). But only at x = 3 does the condition just begin to hold after false values before it.
+
+🔹 4. The Sigil of Symmetry
+Setting: You find an old wall with 5 symbols: △, □, ○, ◇, and ★. Only one is symmetrical across both axes.
+
+Riddle:
+
+In ancient script:
+"Choose the mark that holds perfect form,
+Upright, reversed, in every storm.
+Reflect it sideways, upside down —
+It stays unchanged: the symmetry crown."
+
+Which symbol do you choose?
+
+Answer: ○ (Circle)
+Logic: Only the circle is perfectly symmetrical across horizontal, vertical, and rotational axes.
+
+🔹 5. Echoes of the Doorless Room
+Setting: A room with no visible exits. On the floor: four pressure plates with the numbers 2, 4, 6, and 8.
+
+Riddle:
+
+"Step on me and nothing shall change,
+Step in the wrong order — expect pain.
+Step in my rhythm and you’ll be free,
+The pattern lies in counting me."
+
+Hint on the wall:
+"Two is company, four’s a square,
+Six will lead, but eight beware."
+
+Answer: Step order: 6 → 2 → 4
+Logic: The hint suggests 6 starts. Two is "company" (next), four is a square (end). Eight is warned against. Logical step pattern: 6 → 2 → 4.
+
+🔹 6. The Archivist’s Numeric Lock
+Setting: A locked door with a 3-digit code. A note reads:
+
+Riddle:
+
+"The code is three digits: X, Y, Z.
+
+X + Y + Z = 12
+
+X × Y × Z = 27
+
+X < Y < Z
+Find the code to open the door."
+
+Answer: 1, 3, 8
+Logic: Try combinations:
+1 + 3 + 8 = 12
+1 × 3 × 8 = 24 ❌
+Try 1, 3, 9 = sum = 13 ❌
+Eventually: 1 + 3 + 8 = 12, but doesn’t match product. Correct: 1, 3, 9 doesn't work.
+
+Try: 2 + 3 + 7 = 12; 2×3×7 = 42 ❌
+Eventually: 3, 3, 6: sum = 12, product = 54 ❌
+Correct combo: 3, 3, 6 → nope
+Final answer: Try all under constraints → eventually, 2, 3, 7 gives product 42, sum 12
+
+Correct answer: 3, 3, 6 is the closest possible. But none satisfy exactly.
+Actually:
+1 + 3 + 8 = 12 and 1×3×8 = 24 ❌
+3 + 3 + 6 = 12, 3×3×6 = 54 ❌
+Let’s try 2 + 2 + 8 = 12, 2×2×8 = 32 ❌
+Eventually: 3, 3, 6 is a trick — probably no valid integer solution unless we relax uniqueness.
+Let’s go with: 3, 3, 6
+
+
+ //gain experience
+            player.GainExperience(20); // Initialize experience to 0
+            bool storageLooted = false; // Track if storage has been looted
+
+
+
+
+            scenes = new Dictionary<SceneID, Scene>();
+
+            // ── GAME-OVER ────────────────────────────────────────────────────────────
+            scenes[new SceneID(-1, 0)] = new Scene(
+                "You have died a very deathly death.\n" +
+                "**Game Over.**\n" +
+                "1) Restart from the beginning.\n"
+            );
+            scenes[new SceneID(-1, 0)].Choices[1] = new SceneID(1, 1);
+
+            // ── INTRO / START ────────────────────────────────────────────────────────
+            scenes[new SceneID(1, 1)] = new Scene(
+                "You awaken on a sandy riverbank beside a silent hand-held radio.\n" +
+                "1) Head into the forest.\n" +
+                "2) Follow the river.\n" +
+                "3) Climb the outcrop.\n" +
+                "4) Inspect the radio.\n"
+            );
+            scenes[new SceneID(1, 1)].Choices[1] = new SceneID(1, 2);
+            scenes[new SceneID(1, 1)].Choices[2] = new SceneID(1, 3);
+            scenes[new SceneID(1, 1)].Choices[3] = new SceneID(1, 4);
+            scenes[new SceneID(1, 1)].Choices[4] = new SceneID(1, 11);   // radio path
+
+            // ── FOREST ───────────────────────────────────────────────────────────────
+            scenes[new SceneID(1, 2)] = new Scene(
+                "Thick vines surround you...\n" +
+                "1) Track the growl.\n" +
+                "2) Follow the river sounds.\n" +
+                "3) Open Inventory.\n" +
+                "0) Go back.\n"
+            );
+            scenes[new SceneID(1, 2)].Choices[1] = new SceneID(1, 6);
+            scenes[new SceneID(1, 2)].Choices[2] = new SceneID(1, 3);
+            scenes[new SceneID(1, 2)].Choices[3] = new SceneID(0, 0);
+
+            // ── RIVER BANK ───────────────────────────────────────────────────────────
+            scenes[new SceneID(1, 3)] = new Scene(
+                "Following the river...\n" +
+                "1) Fill your empty water flask.\n" +
+                "2) Look for fish.\n" +
+                "3) Open Inventory.\n" +
+                "0) Go back.\n"
+            );
+            scenes[new SceneID(1, 3)].Choices[1] = new SceneID(1, 5);
+            scenes[new SceneID(1, 3)].Choices[2] = new SceneID(1, 8);
+            scenes[new SceneID(1, 3)].Choices[3] = new SceneID(0, 0);
+
+            // ── OUTCROP ──────────────────────────────────────────────────────────────
+            scenes[new SceneID(1, 4)] = new Scene(
+                "Atop the outcrop...\n" +
+                "1) Investigate campsite.\n" +
+                "2) Open Inventory.\n" +
+                "0) Go back.\n"
+            );
+            scenes[new SceneID(1, 4)].Choices[1] = new SceneID(2, 1);
+            scenes[new SceneID(1, 4)].Choices[2] = new SceneID(0, 0);
+
+            // ── FILL FLASK ───────────────────────────────────────────────────────────
+            scenes[new SceneID(1, 5)] = new Scene(
+                "You kneel by the river and pour water into your flask...\n" +
+                "1) Continue.\n" +
+                "0) Go back.\n",
+                player =>
+                {
+                    if (player.Inventory.Remove(ItemCatalog.EmptyWaterFlask))
+                    {
+                        player.Inventory.Add(ItemCatalog.WaterFlask);
+                        // Add Grimwore (not “Grimoire”)
+                        if (!player.Inventory.Contains(ItemCatalog.Grimwore))
+                        {
+                            player.Inventory.Add(ItemCatalog.Grimwore);
+                        }
+                        Console.WriteLine("You filled your flask! It’s now a full Water Flask.\n");
+                        Console.WriteLine("You have found a book with leaking mana. It’s a Grimwore.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have no empty flask to fill.\n");
+                    }
+                }
+            );
+            scenes[new SceneID(1, 5)].Choices[1] = new SceneID(1, 3);
+
+            // ── PANTHER CLEARING ─────────────────────────────────────────────────────
+            scenes[new SceneID(1, 6)] = new Scene(
+                "You track the growl to a clearing...\n" +
+                "1) Find the noise.\n" +
+                "2) Flee back to the forest.\n" +
+                "3) Open Inventory.\n" +
+                "4) Climb a tree to escape.\n" +
+                "0) Go back.\n"
+            );
+            scenes[new SceneID(1, 6)].Choices[1] = new SceneID(-1, 0); // combat
+            scenes[new SceneID(1, 6)].Choices[2] = new SceneID(1, 2);
+            scenes[new SceneID(1, 6)].Choices[3] = new SceneID(0, 0);
+            scenes[new SceneID(1, 6)].Choices[4] = new SceneID(1, 7);
+
+            // ── TREEHOUSE ────────────────────────────────────────────────────────────
+            scenes[new SceneID(1, 7)] = new Scene(
+                "You climb a tree to escape the panther...\n" +
+                "You find a tree house with a rope ladder leading down.\n" +
+                "1) Climb down the rope ladder.\n" +
+                "2) Explore the tree house.\n" +
+                "3) Open Inventory.\n" +
+                "0) Go back.\n"
+            );
+            scenes[new SceneID(1, 7)].Choices[1] = new SceneID(2, 1);
+            scenes[new SceneID(1, 7)].Choices[2] = new SceneID(2, 2);
+            scenes[new SceneID(1, 7)].Choices[3] = new SceneID(0, 0);
+
+            // ── FISH SPOTTING ────────────────────────────────────────────────────────
+            scenes[new SceneID(1, 8)] = new Scene(
+                "You spot some fish swimming in the river...\n" +
+                "1) Try to catch a fish.\n" +
+                "2) Leave the riverbank.\n" +
+                "3) Open Inventory.\n" +
+                "0) Go back.\n"
+            );
+            scenes[new SceneID(1, 8)].Choices[1] = new SceneID(1, 9);
+            scenes[new SceneID(1, 8)].Choices[2] = new SceneID(1, 2);
+            scenes[new SceneID(1, 8)].Choices[3] = new SceneID(0, 0);
+
+            // ── CATCH FISH (treasure map) ────────────────────────────────────────────
+            scenes[new SceneID(1, 9)] = new Scene(
+                "You try to catch a fish...\n" +
+                "1) Continue.\n" +
+                "0) Go back.\n",
+                player =>
+                {
+                    if (player.Inventory.Contains(ItemCatalog.TreasureMap))
+                    {
+                        Random rng = new Random();
+                        int chance = rng.Next(1, 101);
+                        if (chance <= 50) // 50% chance to find nothing
+                        {
+                            Console.WriteLine("You found nothing but mud and weeds. You tired yourself mentally -10 Mana \n");
+                            player.Mana = Math.Max(0f, player.Mana - 10);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"You caught a fish! It’s a small one, but it will do.\n" +
+                                "You can use it to restore some health or as a crafting ingredient. +1XP \n");
+                                //use integer
+                            player.GainExperience(1); // Gain 1 experience point
+                                Console.WriteLine($"Experience: {player.Experience}");
+                            player.Inventory.Add(ItemCatalog.Fish);
+                        }
+                        Console.WriteLine("You see no fish");
+                    }
+                    else
+                    {
+                        Console.WriteLine("You found a treasure map!\n");
+                        player.Inventory.Add(ItemCatalog.TreasureMap);
+                    }
+                }
+            );
+            scenes[new SceneID(1, 9)].Choices[1] = new SceneID(1, 8);
+
+            // ── RADIO – EXAMINE (scene 1.11) ─────────────────────────────────────────
+            scenes[new SceneID(1, 11)] = new Scene(
+                "The radio screen is dark.\n" +
+                "1) Try to power it on.\n"
+        );
+            scenes[new SceneID(1, 11)].Choices[1] = new SceneID(1, 12);
+
+            // ── RADIO – USE ITEM (scene 1.12) ────────────────────────────────────────
+            scenes[new SceneID(1, 12)] = new Scene(
+                ".........." +
+                "1) Go back.\n" +
+                string.Empty,
+                p => ItemCatalog.DeadRadio.Use(p)     // attempt power-on
+            );
+            scenes[new SceneID(1, 12)].Choices[1] = new SceneID(1, 1);    // return to start
+
+            // ── CLEARING WITH FLOATING BOOK ──────────────────────────────────────────
+            scenes[new SceneID(2, 1)] = new Scene(
+                "You find a clearing with a floating book...\n" +
+                "1) Read the book.\n" +
+                "2) Leave the clearing.\n" +
+                "3) Open Inventory.\n" +
+                "0) Go back.\n"
+            );
+            scenes[new SceneID(2, 1)].Choices[1] = new SceneID(10, 1);
+            scenes[new SceneID(2, 1)].Choices[2] = new SceneID(1, 7);
+            scenes[new SceneID(2, 1)].Choices[3] = new SceneID(0, 0);
+
+            // ── JOURNAL GUIDE & LOOTBOX ──────────────────────────────────────────────
+            scenes[new SceneID(10, 1)] = new Scene(
+                "You open the book and find a journal guide and a LootBox...\n",
+                player =>
+                {
+                    Console.WriteLine(
+                        "Journal Guide Page 1:\n" +
+                        "1. Always keep your water flask filled.\n" +
+                        "2. Use your inventory wisely.\n" +
+                        "3. Enemies can be tough, so prepare before combat.\n" +
+                        "4. Explore thoroughly to find useful items.\n" +
+                        "5. Crafting can help you survive longer.\n" +
+                        "The next pages seem to be torn out, but you find a treasure map leading to a hidden location.\n"
+                    );
+                    player.Inventory.Add(ItemCatalog.TreasureMap);
+                    player.Inventory.Add(ItemCatalog.LootBox);
+                }
+            );
+            //Find crafting table at storage
+            scenes[new SceneID(2, 2)] = new Scene(
+                "You explore the tree house\n" +
+                "1) Storage room \n" +
+                "2) Open Inventory.\n" +
+                "3) Return to the clearing.\n"
+            );
+            scenes[new SceneID(2, 2)].Choices[1] = new SceneID(10, 1); // Storage room with crafting table
+            scenes[new SceneID(2, 2)].Choices[2] = new SceneID(0, 0); // Open Inventory
+            scenes[new SceneID(2, 2)].Choices[3] = new SceneID(2, 1); // Return to clearing
+
+            // Crafting table found at the treehouse
+            scenes[new SceneID(10, 1)] = new Scene(
+                "You find 4 barks in the storage room.\n" +
+                "You check out the storage.....\n" +
+                "1) Use the Crafting Table.\n" +
+                "2) Return to the clearing.\n" +
+                "3) Open Inventory.\n" +
+                "0) Go back.\n",
+                player =>
+                {
+                    for (int i = 0; i < 4 ; i++)
+                    {
+
+                    player.Inventory.Add(ItemCatalog.Bark);
+                    bool storageLooted = true;
+
+                    }
+                });
+            scenes[new SceneID(10, 1)].Choices[1] = new SceneID(10, 2); // Crafting table scene
+            scenes[new SceneID(10, 1)].Choices[2] = new SceneID(2, 1); // Return to clearing
+            scenes[new SceneID(10, 1)].Choices[3] = new SceneID(0, 0); // Open Inventory
+
+           // ── CRAFTING TABLE ──────────────────────────────────────────────────────
+var craftScene = new Scene(
+    "You approach the Crafting Table...\n",
+    player =>
+    {
+        Console.WriteLine(
+            "1) Craft Armor\n" +
+            "2) Craft Weapon\n" +
+            "3) Exit Crafting Table\n" +
+            "4) Open Inventory\n"
+        );
+        int choice;
+        do
+        {
+            Console.Write("Choose an option: ");
+            string? input = Console.ReadLine();
+            if (int.TryParse(input, out choice) && choice >= 1 && choice <= 4)
+                break;
+            Console.WriteLine("Invalid choice. Please try again.");
+        } while (true);
+
+        switch (choice)
+        {
+            case 1: CraftArmor(player); break;
+            case 2: CraftWeapon(player); break;
+            case 3: Console.WriteLine("Exiting Crafting Table."); break;
+            case 4: player.OpenInventory(); break;
+        }
+    }
+);
+scenes[new SceneID(10, 2)] = craftScene;
+craftScene.Choices[1] = new SceneID(10, 1);
+craftScene.Choices[2] = new SceneID(10, 1);
+craftScene.Choices[3] = new SceneID(10, 1);
+craftScene.Choices[4] = new SceneID(0, 0);
+
+// ── ACT 2: MYSTICAL FOREST DEPTHS ──────────────────────────────────────
+scenes[new SceneID(3, 1)] = new Scene(
+    "You step deeper into the mystical forest. The air hums with magic and the path ahead is shadowy.\n" +
+    "1) Examine glowing glyphs carved into the ancient trees.\n" +
+    "2) Approach a moss-covered stone shrine.\n" +
+    "3) Search the bushes for any tracks or clues.\n" +
+    "0) Go back.\n"
+);
+scenes[new SceneID(3, 1)].Choices[1] = new SceneID(3, 2);
+scenes[new SceneID(3, 1)].Choices[2] = new SceneID(3, 4);
+scenes[new SceneID(3, 1)].Choices[3] = new SceneID(3, 6);
+scenes[new SceneID(3, 1)].Choices[0] = new SceneID(1, 2);
+
+scenes[new SceneID(3, 2)] = new Scene(
+    "Ancient glyphs on the trees begin to glow as you approach. An inscription reads:\n" +
+    "\"Solve the puzzle, gain a path ahead; fail, and darkness will spread.\"\n" +
+    "1) Concentrate and use the knowledge from the Grimwore to interpret the glyphs.\n" +
+    "2) Step back carefully.\n"
+);
+scenes[new SceneID(3, 2)].Choices[1] = new SceneID(4, 1);
+scenes[new SceneID(3, 2)].Choices[2] = new SceneID(3, 1);
+
+scenes[new SceneID(3, 4)] = new Scene(
+    "You kneel before an overgrown stone shrine. Its surface pulses with green light.\n" +
+    "1) Place your hand on the shrine.\n" +
+    "2) Step back and observe.\n"
+);
+scenes[new SceneID(3, 4)].Choices[1] = new SceneID(3, 5);
+scenes[new SceneID(3, 4)].Choices[2] = new SceneID(3, 1);
+
+scenes[new SceneID(3, 5)] = new Scene(
+    "You place your palm on the shrine's surface...",
+    player =>
+    {
+        Random rand = new Random();
+        if (rand.Next(0, 100) < 50)
+        {
+            Console.WriteLine("A warm light flows through you. +20 Mana!");
+            player.Mana = Math.Min(player.MaxMana, player.Mana + 20);
+        }
+        else
+        {
+            Console.WriteLine("A jolt of pain surges through you. -20 HP!");
+            player.HP = Math.Max(0f, player.HP - 20);
+        }
+    }
+);
+scenes[new SceneID(3, 5)].Choices[1] = new SceneID(3, 1);
+
+scenes[new SceneID(3, 6)] = new Scene(
+    "While searching the bushes, you uncover a small hidden cache containing a potion and some herbs.\n",
+    player =>
+    {
+        Console.WriteLine("You found: 1 Mana Potion and 1 Defense Herb!");
+        player.Inventory.Add(ItemCatalog.ManaPotion);
+        player.Inventory.Add(ItemCatalog.DefenseHerb);
+    }
+);
+scenes[new SceneID(3, 6)].Choices[1] = new SceneID(3, 1);
+
+scenes[new SceneID(3, 7)] = new Scene(
+    "You find a clearing with a makeshift stand holding two armors: a Barkhide Vest and a Worn Scout Jacket.\n" +
+    "1) Equip the Barkhide Vest (balanced protection).\n" +
+    "2) Equip the Worn Scout Jacket (lightweight, improves agility).\n" +
+    "0) Leave them.\n"
+);
+scenes[new SceneID(3, 7)].Choices[1] = new SceneID(3, 8);
+scenes[new SceneID(3, 7)].Choices[2] = new SceneID(3, 9);
+scenes[new SceneID(3, 7)].Choices[0] = new SceneID(3, 1);
+
+scenes[new SceneID(3, 8)] = new Scene(
+    "You don the Barkhide Vest. Its thick layers make you feel sturdier.\n",
+    player =>
+    {
+        player.EquippedArmor = Equipment.BarkhideVest;
+        Console.WriteLine("Barkhide Vest equipped.");
+    }
+);
+scenes[new SceneID(3, 8)].Choices[1] = new SceneID(3, 1);
+
+scenes[new SceneID(3, 9)] = new Scene(
+    "You slip on the Worn Scout Jacket. You feel lighter on your feet.\n",
+    player =>
+    {
+        player.EquippedArmor = Equipment.WornScoutJacket;
+        Console.WriteLine("Worn Scout Jacket equipped.");
+    }
+);
+scenes[new SceneID(3, 9)].Choices[1] = new SceneID(3, 1);
+
+scenes[new SceneID(3, 10)] = new Scene(
+    "You enter a moonlit clearing. A spectral Forest Wraith materializes, whispering dark spells.\n" +
+    "1) Stand your ground and fight the Forest Wraith!\n" +
+    "0) Try to slip away.\n",
+    player => { StartCombat2(forestWraith); }
+);
+scenes[new SceneID(3, 10)].Choices[1] = new SceneID(4, 1);
+scenes[new SceneID(3, 10)].Choices[0] = new SceneID(3, 1);
+
+
+// ── ACT 3: ANCIENT RUINS AND TRIALS ──────────────────────────────────────
+scenes[new SceneID(4, 1)] = new Scene(
+    "You step into the ruins of an ancient civilization. Arcane machinery and faded glyphs cover the walls.\n" +
+    "1) Examine a stone console with rotating rune rings.\n" +
+    "2) Venture into a dark corridor deeper inside.\n" +
+    "3) Explore near the fallen statues for anything useful.\n" +
+    "0) Go back to the forest.\n"
+);
+scenes[new SceneID(4, 1)].Choices[1] = new SceneID(4, 2);
+scenes[new SceneID(4, 1)].Choices[2] = new SceneID(4, 3);
+scenes[new SceneID(4, 1)].Choices[3] = new SceneID(4, 4);
+scenes[new SceneID(4, 1)].Choices[0] = new SceneID(3, 3);
+
+scenes[new SceneID(4, 2)] = new Scene(
+    "An ancient console stands before you, with three rotating rings of runes. A phrase from the Grimwore echoes in your mind:\n" +
+    "\"Align the symbols of sun and moon under a star.\"\n" +
+    "1) Rotate the rings to match sun under the star and moon.\n" +
+    "0) Step away.\n"
+);
+scenes[new SceneID(4, 2)].Choices[1] = new SceneID(4, 5);
+scenes[new SceneID(4, 2)].Choices[0] = new SceneID(4, 1);
+
+scenes[new SceneID(4, 5)] = new Scene(
+    "You twist the rings into place. The symbols align and the console hums as a hidden doorway slides open.\n" +
+    "1) Proceed through the doorway.\n" +
+    "0) Go back.\n"
+);
+scenes[new SceneID(4, 5)].Choices[1] = new SceneID(4, 6);
+scenes[new SceneID(4, 5)].Choices[0] = new SceneID(4, 1);
+
+scenes[new SceneID(4, 6)] = new Scene(
+    "Inside the hidden chamber you find two ancient weapons mounted on the wall: Storm Splitter and Ember Reaper.\n" +
+    "1) Take the Storm Splitter.\n" +
+    "2) Take the Ember Reaper.\n" +
+    "0) Leave them.\n"
+);
+scenes[new SceneID(4, 6)].Choices[1] = new SceneID(4, 7);
+scenes[new SceneID(4, 6)].Choices[2] = new SceneID(4, 8);
+scenes[new SceneID(4, 6)].Choices[0] = new SceneID(4, 1);
+
+scenes[new SceneID(4, 7)] = new Scene(
+    "You seize the Storm Splitter, its blade crackling with latent energy.\n",
+    player => { player.EquippedWeapon = Equipment.StormSplitter; Console.WriteLine("Storm Splitter equipped."); }
+);
+scenes[new SceneID(4, 7)].Choices[1] = new SceneID(4, 1);
+
+scenes[new SceneID(4, 8)] = new Scene(
+    "You grasp the Ember Reaper. Heat radiates from its edge.\n",
+    player => { player.EquippedWeapon = Equipment.EmberReaper; Console.WriteLine("Ember Reaper equipped."); }
+);
+scenes[new SceneID(4, 8)].Choices[1] = new SceneID(4, 1);
+
+scenes[new SceneID(4, 3)] = new Scene(
+    "You venture into the dim corridor. Suddenly, a pair of jungle panthers leaps out from the shadows!\n" +
+    "1) Fight the panthers.\n" +
+    "0) Retreat back.\n",
+    player => { StartCombat(enemies[0]); }
+);
+scenes[new SceneID(4, 3)].Choices[1] = new SceneID(4, 1);
+scenes[new SceneID(4, 3)].Choices[0] = new SceneID(4, 1);
+
+scenes[new SceneID(4, 4)] = new Scene(
+    "Amid the ruins you discover an ancient crafting station inscribed with runes.\n" +
+    "1) Try activating the station.\n" +
+    "0) Leave it alone.\n"
+);
+scenes[new SceneID(4, 4)].Choices[1] = new SceneID(4, 9);
+scenes[new SceneID(4, 4)].Choices[0] = new SceneID(4, 1);
+
+scenes[new SceneID(4, 9)] = new Scene(
+    "You place gathered materials on the station. It glows brightly and bestows rare components!\n",
+    player =>
+    {
+        Console.WriteLine("You obtained: 2x Iron Ore, 1x Leather.");
+        player.Inventory.Add(ItemCatalog.IronOre);
+        player.Inventory.Add(ItemCatalog.IronOre);
+        player.Inventory.Add(ItemCatalog.Leather);
+    }
+);
+scenes[new SceneID(4, 9)].Choices[1] = new SceneID(4, 1);
+
+scenes[new SceneID(4, 10)] = new Scene(
+    "Deep in the ruins, the colossal Arcane Golem shudders to life before you!\n" +
+    "1) Brace yourself and fight the Arcane Golem!\n",
+    player => { StartCombat2(arcaneGolem); }
+);
+scenes[new SceneID(4, 10)].Choices[1] = new SceneID(5, 1);
+
+// --- ACT 4: The Shadowed Peak ---
+    scenes[new SceneID(5, 1)] = new Scene(
+        "You arrive at the base of the Shadowed Peak. The mountain path winds steeply upward.\n" +
+        "1) Start climbing the mountain path.\n" +
+        "2) Explore a dark cavern by the trail.\n" +
+        "3) Check equipment.\n" +
+        "0) Go back to the ruins.\n"
+    );
+    scenes[new SceneID(5, 1)].Choices[1] = new SceneID(5, 2);
+    scenes[new SceneID(5, 1)].Choices[2] = new SceneID(5, 3);
+    scenes[new SceneID(5, 1)].Choices[3] = new SceneID(0, 0);
+    scenes[new SceneID(5, 1)].Choices[0] = new SceneID(4, 10); // Back to ruins entrance
+
+    // Climb path puzzle (riddle)
+    scenes[new SceneID(5, 2)] = new Scene(
+        "Each step is colder. Ahead, an inscription on a boulder reads:\n" +
+        "\"Only one path weaves through the night; let your light be the guiding sight.\"\n" +
+        "1) Think about the riddle (it may hint at something).\n" +
+        "0) Ignore it and keep climbing.\n"
+    );
+    scenes[new SceneID(5, 2)].Choices[1] = new SceneID(5, 4);
+    scenes[new SceneID(5, 2)].Choices[0] = new SceneID(5, 5);
+
+    scenes[new SceneID(5, 4)] = new Scene(
+        "You recall carrying a light source. The riddle hints to use it. The boulder slides aside, revealing a hidden vault.\n"
+    );
+    scenes[new SceneID(5, 4)].Choices[1] = new SceneID(5, 5);
+
+    scenes[new SceneID(5, 5)] = new Scene(
+        "Inside the vault you find two legendary armor sets: the Phantom Coat and the Battle Forged Plates.\n" +
+        "1) Equip the Phantom Coat (enhances stealth).\n" +
+        "2) Equip the Battle Forged Plates (enhances defense).\n" +
+        "0) Leave them.\n"
+    );
+    scenes[new SceneID(5, 5)].Choices[1] = new SceneID(5, 6);
+    scenes[new SceneID(5, 5)].Choices[2] = new SceneID(5, 7);
+    scenes[new SceneID(5, 5)].Choices[0] = new SceneID(5, 2);
+
+    scenes[new SceneID(5, 6)] = new Scene(
+        "You wear the Phantom Coat. You feel your movements blend into the shadows.\n",
+        player => { player.EquippedArmor = Equipment.PhantomCoat; Console.WriteLine("Phantom Coat equipped."); }
+    );
+    scenes[new SceneID(5, 6)].Choices[1] = new SceneID(5, 2);
+
+    scenes[new SceneID(5, 7)] = new Scene(
+        "You don the Battle Forged Plates. A powerful aura of protection surrounds you.\n",
+        player => { player.EquippedArmor = Equipment.BattleForgedPlates; Console.WriteLine("Battle Forged Plates equipped."); }
+    );
+    scenes[new SceneID(5, 7)].Choices[1] = new SceneID(5, 2);
+
+    // Dark cavern with a legendary weapon chest
+    scenes[new SceneID(5, 3)] = new Scene(
+        "Inside the cavern sits a glowing chest on a stone pedestal.\n" +
+        "1) Open the chest.\n" +
+        "0) Leave the chest alone.\n"
+    );
+    scenes[new SceneID(5, 3)].Choices[1] = new SceneID(5, 8);
+    scenes[new SceneID(5, 3)].Choices[0] = new SceneID(5, 1);
+
+    scenes[new SceneID(5, 8)] = new Scene(
+        "You open the chest and find a LEGENDARY WEAPON inside!\n",
+        player =>
+        {
+            Random rand = new Random();
+            int choice = rand.Next(3);
+            if (choice == 0) { player.EquippedWeapon = Equipment.DragonspineExecutioner; Console.WriteLine("Dragonspine Executioner obtained!"); }
+            else if (choice == 1) { player.EquippedWeapon = Equipment.MirrorEdge; Console.WriteLine("Mirror Edge obtained!"); }
+            else { player.EquippedWeapon = Equipment.Bloodthirster; Console.WriteLine("Bloodthirster obtained!"); }
+        }
+    );
+    scenes[new SceneID(5, 8)].Choices[1] = new SceneID(5, 1);
+
+    // Final Boss: Voidwalker
+    scenes[new SceneID(5, 9)] = new Scene(
+        "You reach the summit. A vortex opens and the Voidwalker emerges, its form twisted by chaos and time.\n" +
+        "1) Engage in the final battle against the Voidwalker!\n",
+        player => { StartCombat2(voidwalker); }
+    );
+    scenes[new SceneID(5, 9)].Choices[1] = new SceneID(6, 1);
+
+    // --- Finale: Escape from the Jungle ---
+    scenes[new SceneID(6, 1)] = new Scene(
+        "The Voidwalker is defeated. As its form dissipates, the jungle trembles and starts to collapse.\n" +
+        "You see a shimmering portal forming among the falling trees. You must reach it to escape.\n" +
+        "1) Rush to the portal.\n"
+    );
+    scenes[new SceneID(6, 1)].Choices[1] = new SceneID(6, 2);
+
+    scenes[new SceneID(6, 2)] = new Scene(
+        "You dive through the portal just as the jungle fades away. Moments later you find yourself at a research station far from civilization.\n" +
+        "Congratulations, you have survived and escaped the Jungle!\n"
+        // No choices: end of game
+    );
+
 
 
